@@ -28,13 +28,11 @@ def add_to_sidebar():
         st.markdown("---")
         st.markdown("# About")
         st.markdown(
-            "📖KnowledgeGPT allows you to ask questions about your "
-            "documents and get accurate answers with instant citations. "
+            "📖ChatObsidian allows you to ask questions about your Notes"
         )
         st.markdown(
             "This tool is a work in progress. "
-            "You can contribute to the project on [GitHub](https://github.com/mmz-001/knowledge_gpt) "  # noqa: E501
+            "You can contribute to the project on [GitHub](https://github.com/) "  # noqa: E501
             "with your feedback and suggestions💡"
         )
-        st.markdown("Made by [mmz_001](https://twitter.com/mm_sasmitha)")
-        st.markdown("---")
+

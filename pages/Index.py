@@ -9,40 +9,32 @@ st.set_page_config(
     page_icon="👋",
 )
 
+st.write("# Index your Documents 👋")
+
 def clear_submit():
     st.session_state["submit"] = False
 
 MarkdownReader = download_loader("MarkdownReader")
 
 loader = MarkdownReader()
-documents = loader.load_data(file=Path('./testdata/test2.md'))
+folder_path = Path('./testdata')
+documents = []
+for file_path in folder_path.glob("*.md"):
+    doc = loader.load_data(file=file_path)
+    for array_elem in doc:
+        documents.append(array_elem)
 
 if st.session_state.get("api_key_configured"):
-    index = GPTSimpleVectorIndex(documents)
-          
-query_str = st.text_area("Ask a question about the document", on_change=clear_submit)
-with st.expander("Advanced Options"):
-    show_all_chunks = st.checkbox("Show all chunks retrieved from vector search")
-    show_full_doc = st.checkbox("Show parsed contents of the document")
-
-
-button = st.button("Submit")
-if button or st.session_state.get("submit"):
-    if not st.session_state.get("api_key_configured"):
-        st.error("Please configure your OpenAI API key!")
-    elif not index:
-        st.error("Please upload a document!")
-    elif not query_str:
-        st.error("Please enter a question!")
+    if Path('index.json').exists():
+        index = GPTSimpleVectorIndex.load_from_disk('index.json')
     else:
-        st.session_state["submit"] = True
-        # Output Columns
-        answer_col, sources_col = st.columns(2)
-        response = index.query(query_str, mode="default")
-        st.write(response)
+        index = GPTSimpleVectorIndex(documents)
+        index.save_to_disk('index.json')
+          
+
 
 add_to_sidebar()
 
-st.write("# Obsidian Chat 👋")
+
 st.write("Document parts:" + str(len(documents)))
 st.write(documents)
