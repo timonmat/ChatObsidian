@@ -1,13 +1,17 @@
 import streamlit as st
-from components.sidebar import add_to_sidebar
 from llama_index import GPTSimpleVectorIndex
 from pathlib import Path
 from llama_index import download_loader
+
+from components.sidebar import add_to_sidebar
+from utils.qa_template import QA_PROMPT
 
 st.set_page_config(
     page_title="Index",
     page_icon="👋",
 )
+
+add_to_sidebar()
 
 st.write("# ChatObsidian 👋")
 
@@ -24,10 +28,10 @@ if st.session_state.get("api_key_configured"):
         st.write("Index not found")
         
           
-query_str = st.text_area("Ask a question about the document", on_change=clear_submit)
+query_str = st.text_area("Ask a question about your Markdown notes", on_change=clear_submit)
 with st.expander("Advanced Options"):
-    show_all_chunks = st.checkbox("Show all chunks retrieved from vector search")
-    show_full_doc = st.checkbox("Show parsed contents of the document")
+    show_context = st.checkbox("Show all chunks retrieved from local vector index search")
+    show_final_query = st.checkbox("Show final templated query")
 
 
 button = st.button("Submit")
@@ -42,7 +46,7 @@ if button or st.session_state.get("submit"):
         st.session_state["submit"] = True
         # Output Columns
         answer_col, sources_col = st.columns(2)
-        response = index.query(query_str, mode="default")
+        response = index.query(query_str, mode="embedding", text_qa_template=QA_PROMPT)
         st.markdown(response)
 
-add_to_sidebar()
+

@@ -1,11 +1,12 @@
 import streamlit as st
+from components.sidebar import add_to_sidebar
 
 st.set_page_config(
     page_title="FAQ",
     page_icon="👋",
 )
 
-
+add_to_sidebar()
 
 def faq():
     st.markdown(
@@ -13,38 +14,28 @@ def faq():
 # FAQ
 
 ## How does ChatObsidian work?
-When you upload a document, it will be divided into smaller chunks 
-and stored in a special type of database called a vector index 
-that allows for semantic search and retrieval.
-When you ask a question, KnowledgeGPT will search through the
-document chunks and find the most relevant ones using the vector index.
-Then, it will use GPT3 to generate a final answer.
+The folder entered on Index page is recursively searched for Markdown files, which are chunked and
+indexed with OpenAI embeddings services. The index is saved locally.
+When asking a question, embeddings are retrieved for the question, and semantically relevant chunks are retrieved from the index context.
+both the question and context are provided with a template to OpenAI GPT which generates the final answer.
 
-## Is my data safe?
-Yes, your data is safe. KnowledgeGPT does not store your documents or
-questions. All uploaded data is deleted after you close the browser tab.
-## Why does it take so long to index my document?
+## QA assistant prompt template
+You can modify the prompt template to make GPT3 work in a way better suited to your Notes content by modofying the file /utils/qa_template.py 
+
+## Is my data private?
+Current version should only be run locally as it saves the index on disk. Do not deploy as an online service.
+OpenAI API's are for indexing all of your notes. OpenAI has stated that no data via api's is saved/re-used,
+but it is an external service, and some are uncomfortable in using any external services on personal data.
+
+## OpenAI API rate limits
 If you are using a free OpenAI API key, it will take a while to index
 your document. This is because the free API key has strict [rate limits](https://platform.openai.com/docs/guides/rate-limits/overview).
 To speed up the indexing process, you can use a paid API key.
 
-## What do the numbers mean under each source?
-For a PDF document, you will see a citation number like this: 3-12. 
-The first number is the page number and the second number is 
-the chunk number on that page. For DOCS and TXT documents, 
-the first number is set to 1 and the second number is the chunk number.
-
 ## Are the answers 100% accurate?
-No, the answers are not 100% accurate. KnowledgeGPT uses GPT-3 to generate
-answers. GPT-3 is a powerful language model, but it sometimes makes mistakes 
-and is prone to hallucinations. Also, KnowledgeGPT uses semantic search
-to find the most relevant chunks and does not see the entire document,
-which means that it may not be able to find all the relevant information and
-may not be able to answer all questions (especially summary-type questions
-or questions that require a lot of context from the document).
-But for most use cases, KnowledgeGPT is very accurate and can answer
-most questions. Always check with the sources to make sure that the answers
-are correct.
+No, the answers are not 100% accurate. GPT3 is prone to occasional hallucination even when provided with context data.
+Read the responses with thought, and decide for yourself.
+This is made for fun, so don't take it  too seriously.
 """
     )
 

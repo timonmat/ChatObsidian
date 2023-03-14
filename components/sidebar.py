@@ -8,12 +8,9 @@ def set_openai_api_key(api_key: str):
 
 def add_to_sidebar():
     with st.sidebar:
-        st.markdown(
-            "## How to use\n"
-            "1. Enter your [OpenAI API key](https://platform.openai.com/account/api-keys) below🔑\n"  # noqa: E501
-            "2. select your obsidian folder 📄\n"
-            "3. Ask a question about the document💬\n"
-        )
+
+        st.sidebar.success("Index and Query your Obsidian notes on the pages above.")
+
         api_key_input = st.text_input(
             "OpenAI API Key",
             type="password",
@@ -25,14 +22,11 @@ def add_to_sidebar():
         if api_key_input:
             set_openai_api_key(api_key_input)
 
-        st.markdown("---")
-        st.markdown("# About")
         st.markdown(
-            "📖ChatObsidian allows you to ask questions about your Notes"
-        )
-        st.markdown(
-            "This tool is a work in progress. "
-            "You can contribute to the project on [GitHub](https://github.com/) "  # noqa: E501
-            "with your feedback and suggestions💡"
+        
+            "## How to use\n"
+            "1. Enter your [OpenAI API key](https://platform.openai.com/account/api-keys) above🔑\n"  # noqa: E501
+            "2. Enter your obsidian notes folder on index page 📄\n"
+            "3. Ask a questions on the Query page 💬\n"
         )
 
