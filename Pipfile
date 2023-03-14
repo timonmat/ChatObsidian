@@ -6,6 +6,8 @@ name = "pypi"
 [packages]
 streamlit = "*"
 llama-index = "*"
+chromadb = "*"
+watchdog = "*"
 
 [dev-packages]
 
