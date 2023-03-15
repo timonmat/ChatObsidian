@@ -9,7 +9,7 @@ import chromadb
 from chromadb.config import Settings
 
 from components.sidebar import add_to_sidebar
-from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, build_chroma_index, INDEX_PATH
+from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, build_chroma_index, persist_chroma_index, INDEX_PATH
 
 st.set_page_config(
     page_title="Index",
@@ -77,7 +77,8 @@ else:
         else:
             st.error("set your api key first")
 
-        
+if st.button("Force persist chromadb"):
+    persist_chroma_index()        
 
 
 add_to_sidebar()
