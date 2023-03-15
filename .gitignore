@@ -163,4 +163,9 @@ cython_debug/
 index.json
 .chroma/
 .chromadb/
+chromadb/
 chroma_index.json
+/components/__pycache__/
+components/__pycache__/*.pyc
+
+.DS_Store

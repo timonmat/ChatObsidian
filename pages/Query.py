@@ -45,5 +45,6 @@ if button or st.session_state.get("submit"):
         st.session_state["submit"] = True
         response = index.query(query_str, mode="embedding", text_qa_template=QA_PROMPT)
         st.markdown(response)
+        st.markdown(response.get_formatted_sources())
 
 

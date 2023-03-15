@@ -1,8 +1,12 @@
 import streamlit as st
 from components.sidebar import add_to_sidebar
 
-from llama_index import GPTSimpleVectorIndex
+import ptvsd
 
+
+# print("Waiting for debugger attach")
+# ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
+# ptvsd.wait_for_attach()
 
 st.set_page_config(
     page_title="ChatObsidian",
