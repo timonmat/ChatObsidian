@@ -3,7 +3,7 @@ from components.sidebar import add_to_sidebar
 
 st.set_page_config(
     page_title="FAQ",
-    page_icon="👋",
+    page_icon="❕",
 )
 
 add_to_sidebar()
@@ -11,7 +11,7 @@ add_to_sidebar()
 def faq():
     st.markdown(
         """
-# FAQ
+# FAQ ❕
 
 ## How does ChatObsidian work?
 The folder entered on Index page is recursively searched for Markdown files, which are chunked and

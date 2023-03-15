@@ -10,10 +10,10 @@ import ptvsd
 
 st.set_page_config(
     page_title="ChatObsidian",
-    page_icon="👋",
+    page_icon="🎱",
 )
 
-st.write("# ChatObsidian 👋")
+st.write("# ChatObsidian 🎱")
 
 st.markdown(
     "📖 ChatObsidian allows you to ask questions about your Notes"

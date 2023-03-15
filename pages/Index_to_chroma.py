@@ -13,10 +13,11 @@ from utils.chroma import create_chroma_client, get_chroma_collection, load_chrom
 
 st.set_page_config(
     page_title="Index",
-    page_icon="👋",
+    page_icon="🧠",
 )
 
-st.write("# Index your Markdown Notes 👋")
+st.write("# Index your Markdown Notes 🧠  ")  
+st.write("Into Persistant Chroma DB  \n")
 
 def clear_submit():
     st.session_state["submit"] = False

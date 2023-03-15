@@ -7,10 +7,10 @@ from llama_index import download_loader
 
 st.set_page_config(
     page_title="Index",
-    page_icon="👋",
+    page_icon="🧠",
 )
 
-st.write("# Index your Markdown Notes 👋")
+st.write("# Index your Markdown Notes 🧠")
 
 def clear_submit():
     st.session_state["submit"] = False

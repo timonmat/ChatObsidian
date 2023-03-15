@@ -7,12 +7,13 @@ from utils.qa_template import QA_PROMPT
 
 st.set_page_config(
     page_title="Query",
-    page_icon="👋",
+    page_icon="🔍",
 )
 
 add_to_sidebar()
 
-st.write("# ChatObsidian 👋")
+st.write("# ChatObsidian 🔍  \n")
+st.write("## Query your data")
 
 def clear_submit():
     st.session_state["submit"] = False

@@ -45,6 +45,6 @@ def query_index(query_str, collection):
     _chroma_collection = chroma_client.get_collection(collection)
     index = None
     index = load_chroma_index(collection)
-    return index.query(query_str, chroma_collection=_chroma_collection, mode='embedding', text_qa_template=QA_PROMPT)
+    return index.query(query_str, chroma_collection=_chroma_collection, mode='embedding', use_async=True, text_qa_template=QA_PROMPT)
     
     

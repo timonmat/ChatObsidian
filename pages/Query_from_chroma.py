@@ -13,12 +13,13 @@ from utils.chroma import create_chroma_client, get_chroma_collection, load_chrom
 
 st.set_page_config(
     page_title="Query",
-    page_icon="👋",
+    page_icon="🔍",
 )
 
 add_to_sidebar()
 
-st.write("# ChatObsidian 👋")
+st.write("# ChatObsidian 🔍  \n")
+st.write("## Query your data")
 
 def clear_submit():
     st.session_state["submit"] = False
@@ -52,7 +53,8 @@ if button or st.session_state.get("submit"):
             st.write('Index loaded')
             response = query_index(query_str, collection)
             st.markdown(response)
-            st.markdown(response.get_formatted_sources())
+            st.markdown("---\n")
+            st.write(response.get_formatted_sources())
         else:
             st.write('Index not found')
             st.error("Please index your documents!")
