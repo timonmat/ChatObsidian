@@ -1,5 +1,6 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
+*.pyc
 *.py[cod]
 *$py.class
 
@@ -165,7 +166,8 @@ index.json
 .chromadb/
 chromadb/
 chroma_index.json
-/components/__pycache__/
-components/__pycache__/*.pyc
+components/__pycache__/
+
 
 .DS_Store
+components/__pycache__/Sidebar.cpython-310.pyc

@@ -24,10 +24,6 @@ def clear_submit():
 def form_callback():
     st.session_state.FOLDER_PATH
 
-#@st.cache_resource
-#def create_local_client():
-#    return chromadb.Client(Settings(chroma_db_impl="duckdb+parquet",persist_directory="./chromadb"))
-
 MarkdownReader = download_loader("MarkdownReader")
 loader = MarkdownReader()
 
@@ -60,12 +56,6 @@ else:
     st.expander("Advanced Options")
     reindex = st.checkbox("Delete existing index, and re-index")
 
-    # Creating a Chroma client
-    
-
-    # chroma_client = chromadb.Client(Settings(chroma_db_impl="duckdb+parquet", persist_directory="./chromadb"))
-    # st.write(chroma_client.list_collections())
-
     # Add a button to start indexing the files
     if st.button("Index files"):
         
@@ -77,15 +67,9 @@ else:
 
         if st.session_state.get("api_key_configured"): # not needed for local embeddings
             if Path(INDEX_PATH).exists() and reindex is not True:
-                # chroma_collection = chroma_client.get_collection("markdown_notes")    
-                # index = load_chroma_index("markdown_notes")
                 st.write("Index exists, and was not recreated")
             elif not Path(INDEX_PATH).exists() or reindex is True:
-
-                #chroma_collection = chroma_client.create_collection("markdown_notes")
                 build_chroma_index(documents, "markdown_notes", reindex)
-                #index = GPTChromaIndex(documents, chroma_collection=chroma_collection)
-                #index.save_to_disk(INDEX_PATH)
                 st.write("Finished indexing documents")
                 st.write("Document parts:" + str(len(documents)))
                 st.write(documents)
