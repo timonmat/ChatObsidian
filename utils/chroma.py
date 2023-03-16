@@ -5,6 +5,7 @@ from pathlib import Path
 import chromadb
 from chromadb.config import Settings
 from llama_index import GPTChromaIndex, LangchainEmbedding, LLMPredictor, PromptHelper
+from llama_index.logger import LlamaLogger
 
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain import OpenAI
@@ -12,6 +13,7 @@ from langchain import OpenAI
 from utils.qa_template import QA_PROMPT
 
 INDEX_PATH = './chroma_index.json'
+llama_logger = LlamaLogger()
 
 # load in HF embedding model from langchain
 model_name = "sentence-transformers/all-MiniLM-L6-v2"
@@ -70,7 +72,11 @@ def query_index(query_str, collection):
                        streaming=False,
                        llm_predictor=llm_predictor, 
                        prompt_helper=prompt_helper,
+                       llama_logger=llama_logger,
                        text_qa_template=QA_PROMPT)
+
+def get_logger():
+    return llama_logger
     
 def persist_chroma_index():
     chroma_client = create_chroma_client()

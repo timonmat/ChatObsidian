@@ -10,7 +10,7 @@ from pathlib import Path
 from components.sidebar import add_to_sidebar
 from utils.qa_template import QA_PROMPT
 
-from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, query_index
+from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, query_index, get_logger
 
 st.set_page_config(
     page_title="Query",
@@ -60,4 +60,6 @@ if button or st.session_state.get("submit"):
             st.write('Index not found')
             st.error("Please index your documents!")
         
-
+with st.expander("Logs"):
+    llama_logger = get_logger()
+    st.write(llama_logger.get_logs())
