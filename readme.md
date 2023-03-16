@@ -21,3 +21,4 @@ streamlit run ChatObsidian.py
 - [ ] pdf support
 - [ ] image support
 - [ ] docker support (folder mapping would suck a bit. maybe map to a default './data/obsidianvault')
+- [ ] multi collection support (collection per vault folder? select which folders to index)

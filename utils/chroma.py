@@ -64,9 +64,12 @@ def query_index(query_str, collection):
     return index.query(query_str, chroma_collection=_chroma_collection, 
                        mode="embedding", 
                        response_mode="tree_summarize", # default, compact, tree_summarize
+                       similarity_top_k=5,
                        verbose=True, 
                        use_async=True, 
                        streaming=False,
+                       llm_predictor=llm_predictor, 
+                       prompt_helper=prompt_helper,
                        text_qa_template=QA_PROMPT)
     
 def persist_chroma_index():
