@@ -20,7 +20,7 @@ When asking a question, embeddings are retrieved for the question, and semantica
 both the question and context are provided with a template to OpenAI GPT which generates the final answer.
 
 ## QA assistant prompt template
-You can modify the prompt template to make GPT3 work in a way better suited to your Notes content by modofying the file /utils/qa_template.py 
+You can modify the prompt template to make GPT3 work in a way better suited to your Notes content by modifying the file /utils/qa_template.py 
 
 ## Is my data private?
 Current version should only be run locally as it saves the index on disk. Do not deploy as an online service.

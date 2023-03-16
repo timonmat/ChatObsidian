@@ -26,7 +26,7 @@ num_output = 1024
 max_chunk_overlap = 20
 
 prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
-llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003", max_tokens=num_output))
+llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=num_output))
 
 @st.cache_resource
 def create_chroma_client():
@@ -41,29 +41,33 @@ def load_chroma_index(collection):
     _chroma_collection = chroma_client.get_collection(collection)
     if Path(INDEX_PATH).exists():
         index = GPTChromaIndex.load_from_disk(INDEX_PATH, chroma_collection=_chroma_collection, embed_model=embed_model, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
-        # index.save_to_disk(INDEX_PATH)
+        
     else:
         index = None
-    return index
+    return index, _chroma_collection
 
 def build_chroma_index(documents, collection, reindex):
     chroma_client = create_chroma_client()
     if reindex is True:
         chroma_client.reset()
         chroma_client.create_collection(collection)
-        st.write("will remove and rebuild")
+        
     _chroma_collection = chroma_client.get_or_create_collection(collection)
     index = None
-    index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, embed_model=embed_model, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
+    index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, embed_model=embed_model, prompt_helper=prompt_helper)
     index.save_to_disk(INDEX_PATH)
     chroma_client.persist()
 
 def query_index(query_str, collection):
-    chroma_client = create_chroma_client()
-    _chroma_collection = chroma_client.get_collection(collection)
     index = None
-    index = load_chroma_index(collection)
-    return index.query(query_str, chroma_collection=_chroma_collection, response_mode="tree_summarize", verbose=True, use_async=True, text_qa_template=QA_PROMPT)
+    index, _chroma_collection = load_chroma_index(collection)
+    return index.query(query_str, chroma_collection=_chroma_collection, 
+                       mode="embedding", 
+                       response_mode="tree_summarize", # default, compact, tree_summarize
+                       verbose=True, 
+                       use_async=True, 
+                       streaming=False,
+                       text_qa_template=QA_PROMPT)
     
 def persist_chroma_index():
     chroma_client = create_chroma_client()

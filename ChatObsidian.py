@@ -1,3 +1,4 @@
+# ChatObsidian.py
 import streamlit as st
 from components.sidebar import add_to_sidebar
 
