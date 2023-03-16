@@ -4,9 +4,10 @@ from pathlib import Path
 
 import chromadb
 from chromadb.config import Settings
-from llama_index import GPTChromaIndex, LangchainEmbedding
+from llama_index import GPTChromaIndex, LangchainEmbedding, LLMPredictor, PromptHelper
 
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain import OpenAI
 
 from utils.qa_template import QA_PROMPT
 
@@ -15,6 +16,17 @@ INDEX_PATH = './chroma_index.json'
 # load in HF embedding model from langchain
 model_name = "sentence-transformers/all-MiniLM-L6-v2"
 embed_model = LangchainEmbedding(HuggingFaceEmbeddings())
+
+# define prompt helper
+# set maximum input size
+max_input_size = 4096
+# set number of output tokens
+num_output = 1024
+# set maximum chunk overlap
+max_chunk_overlap = 20
+
+prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
+llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="text-davinci-003", max_tokens=num_output))
 
 @st.cache_resource
 def create_chroma_client():
@@ -28,7 +40,7 @@ def load_chroma_index(collection):
     chroma_client = create_chroma_client()
     _chroma_collection = chroma_client.get_collection(collection)
     if Path(INDEX_PATH).exists():
-        index = GPTChromaIndex.load_from_disk(INDEX_PATH, chroma_collection=_chroma_collection, embed_model=embed_model)
+        index = GPTChromaIndex.load_from_disk(INDEX_PATH, chroma_collection=_chroma_collection, embed_model=embed_model, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
         # index.save_to_disk(INDEX_PATH)
     else:
         index = None
@@ -42,7 +54,7 @@ def build_chroma_index(documents, collection, reindex):
         st.write("will remove and rebuild")
     _chroma_collection = chroma_client.get_or_create_collection(collection)
     index = None
-    index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, embed_model=embed_model)
+    index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, embed_model=embed_model, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
     index.save_to_disk(INDEX_PATH)
     chroma_client.persist()
 
