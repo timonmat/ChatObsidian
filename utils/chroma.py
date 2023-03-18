@@ -32,7 +32,7 @@ max_chunk_overlap = 20
 prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
 
 # define LLM
-llm_predictor = LLMPredictor(llm=OpenAI(temperature=0.7, model_name="gpt-3.5-turbo", max_tokens=num_output))
+llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=num_output))
 
 @st.cache_resource
 def create_chroma_client():
@@ -81,9 +81,10 @@ def refresh_chroma_index(documents, collection):
 def query_index(query_str, collection):
     index = None
     index, _chroma_collection = load_chroma_index(collection)
-    return index.query(query_str, chroma_collection=_chroma_collection,  
+    return index.query(query_str, chroma_collection=_chroma_collection,
+                       mode="embedding",
+                       similarity_top_k= 3,  
                        response_mode="compact", # default, compact, tree_summarize
-                       similarity_top_k= 5, 
                        llm_predictor=llm_predictor, 
                        prompt_helper=prompt_helper,
                        llama_logger=llama_logger,

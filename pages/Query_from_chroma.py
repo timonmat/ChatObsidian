@@ -25,18 +25,8 @@ st.write("## Query your data")
 def clear_submit():
     st.session_state["submit"] = False
 
-clear_submit()
-              
+clear_submit()            
 query_str = st.text_area("Ask a question about your Markdown notes", on_change=clear_submit)
-with st.expander("Advanced Options"):
-    show_sources = st.checkbox("Show sources")
-#    show_final_query = st.checkbox("Show final templated query")
-    chroma_client = create_chroma_client()
-    st.write(chroma_client.list_collections())
-    chroma_collection = chroma_client.get_collection("markdown_notes")
-    st.write("documents in collection:  " + str(chroma_collection.count()))
-
-
 
 button = st.button("Submit")
 if button or st.session_state.get("submit"):
@@ -54,12 +44,19 @@ if button or st.session_state.get("submit"):
             response = query_index(query_str, collection)
             st.markdown(response)
             st.markdown("---\n")
-            if show_sources:
-                st.code(response.get_formatted_sources())
+            with st.expander("Sources"):
+                chroma_client = create_chroma_client()
+                chroma_collection = chroma_client.get_collection("markdown_notes")
+                st.write("documents in collection:  " + str(chroma_collection.count()))
+                st.markdown(response.get_formatted_sources())
+                            
         else:
             st.write('Collection not found')
             st.error("Please index your documents!")
-        
+
+
+
+
 with st.expander("Logs"):
     llama_logger = get_logger()
     st.write(llama_logger.get_logs())

@@ -44,7 +44,7 @@ if button or st.session_state.get("submit"):
         st.error("Please enter a question!")
     else:
         st.session_state["submit"] = True
-        response = index.query(query_str, mode="embedding", text_qa_template=QA_PROMPT)
+        response = index.query(query_str, mode="embedding", similarity_top_k=3, text_qa_template=QA_PROMPT, verbose=True)
         st.markdown(response)
         st.markdown(response.get_formatted_sources())
 
