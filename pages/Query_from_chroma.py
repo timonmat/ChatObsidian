@@ -48,16 +48,16 @@ if button or st.session_state.get("submit"):
         st.session_state["submit"] = True
         collection = "markdown_notes"
         index = None
-        index = load_chroma_index(collection)
-        if index:
-            st.sidebar.success('Index loaded')
+        chroma_collection = get_chroma_collection(collection)
+        if chroma_collection:
+            st.sidebar.success('Collection exists')
             response = query_index(query_str, collection)
             st.markdown(response)
             st.markdown("---\n")
             if show_sources:
                 st.code(response.get_formatted_sources())
         else:
-            st.write('Index not found')
+            st.write('Collection not found')
             st.error("Please index your documents!")
         
 with st.expander("Logs"):

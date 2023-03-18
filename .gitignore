@@ -162,6 +162,8 @@ cython_debug/
 
 # ChatObsidian specific
 index.json
+docs_index.json
+temp/
 .chroma/
 .chromadb/
 chromadb/

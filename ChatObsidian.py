@@ -3,7 +3,7 @@ import streamlit as st
 from components.sidebar import add_to_sidebar
 
 import ptvsd
-
+from utils.logging import add_logging_config
 
 # print("Waiting for debugger attach")
 # ptvsd.enable_attach(address=('localhost', 5678), redirect_output=True)
@@ -13,6 +13,8 @@ st.set_page_config(
     page_title="ChatObsidian",
     page_icon="🎱",
 )
+
+add_logging_config()
 
 st.write("# ChatObsidian 🎱")
 

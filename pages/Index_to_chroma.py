@@ -4,20 +4,25 @@ import os
 
 from pathlib import Path
 
-from llama_index import GPTSimpleVectorIndex, GPTChromaIndex, download_loader
-
-import chromadb
-from chromadb.config import Settings
+from llama_index import download_loader
 
 from components.sidebar import add_to_sidebar
-from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, build_chroma_index, persist_chroma_index, INDEX_PATH
+from utils.chroma import (build_chroma_index, 
+                          persist_chroma_index,
+                          refresh_chroma_index,
+                          INDEX_PATH)
+from utils.refresh_manager import create_docs_index, load_docs_index, refresh_docs_index
+import logging
+
 
 st.set_page_config(
     page_title="Index",
     page_icon="🧠",
 )
 
+
 add_to_sidebar()
+user_collection = "markdown_notes"
 
 st.write("# Index your Markdown Notes 🧠  ")  
 st.write("Into Persistant Chroma DB  \n")
@@ -42,7 +47,7 @@ folder_path = st.text_input(
             type="default",
             key='FOLDER_PATH',
             placeholder="/Users/whoever/Library/Mobile Documents/iCloud~md~obsidian/Documents/ObsidianVault",
-            help="/Users/xx/Library...",  # noqa: E501
+            help="copy your obsidian vault path here",  
             value=st.session_state.get("FOLDER_PATH", ""),
             on_change=form_callback,
         )
@@ -63,11 +68,18 @@ reindex = st.checkbox("Delete existing index, and re-index")
 # else:
 #     st.write(f"Found {len(files)} Markdown files in {folder_path}")
 
-
+collection = 'markdown_notes'
 
 placeholder = st.empty()
-col1, col2, col3 = st.columns([1,1,1])
+col1, col2, col3 = st.columns([2,1,1])
 with col2:
+    if st.button("Refresh index [wip]"):
+        documents = ObsidianReader(folder_path).load_data() # Returns list of documents
+        refreshed_documents = refresh_chroma_index(documents, collection)
+        with placeholder:
+            st.write("Refreshed, and added documents:  ")
+            st.write(refreshed_documents)    
+with col3:
     if st.button("Force persist chromadb"):
         persist_chroma_index()
         with placeholder:
@@ -88,11 +100,12 @@ with col1:# Add a button to start indexing the files
                 placeholder.write("Index exists, and was not recreated")
             elif not Path(INDEX_PATH).exists() or reindex is True:
                 placeholder.write("will remove and rebuild")
-                build_chroma_index(documents, "markdown_notes", reindex)
+                create_docs_index(folder_path)
+                build_chroma_index(documents, collection, reindex)
                 with placeholder:
                     st.write("Finished indexing documents")
-                    st.write("Document parts:" + str(len(documents)))
-                    st.write(documents)
+                    st.write("Document count:" + str(len(documents)))
+                    # st.write(documents)
         else:
             st.error("set your api key first")
     

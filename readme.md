@@ -5,7 +5,7 @@ Intended for Obsidian notes vault, but you could use it for any local folder of 
 
 run locally with
 
-```
+```bash
 pipenv install \
 pipenv shell \
 streamlit run ChatObsidian.py
