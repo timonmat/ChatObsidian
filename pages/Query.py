@@ -18,7 +18,7 @@ llm_predictor = get_llm_predictor()
 prompt_helper = get_prompt_helper()
 
 st.write("# ChatObsidian 🔍  \n")
-st.write("## Query your data")
+st.write("### Query your data from GPTSimpleIndex")
 
 def clear_submit():
     st.session_state["submit"] = False
@@ -37,10 +37,6 @@ if st.session_state.get("api_key_configured"):
         
           
 query_str = st.text_area("Ask a question about your Markdown notes", on_change=clear_submit)
-with st.expander("Advanced Options"):
-    show_context = st.checkbox("Show all chunks retrieved from local vector index search")
-    show_final_query = st.checkbox("Show final templated query")
-
 
 button = st.button("Submit")
 if button or st.session_state.get("submit"):

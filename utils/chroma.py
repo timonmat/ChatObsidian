@@ -31,21 +31,19 @@ def get_chroma_collection(collection_name):
 
 @st.cache_resource
 def load_chroma_index(collection):
-    chroma_client = create_chroma_client()
-    _chroma_collection = chroma_client.get_collection(collection)
+    _chroma_collection = get_chroma_collection(collection)
     if Path(INDEX_PATH).exists():
         index = GPTChromaIndex.load_from_disk(INDEX_PATH, chroma_collection=_chroma_collection, embed_model=embed_model, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
         logging.info('Index loaded for collection ' + collection )
     else:
         index = None
-    return index, _chroma_collection
+    return index
 
 def build_chroma_index(documents, collection, reindex):
     chroma_client = create_chroma_client()
     if reindex is True:
         chroma_client.reset()
-        chroma_client.create_collection(collection)
-
+        
     _chroma_collection = chroma_client.get_or_create_collection(collection)
     for i in range(len(documents)):
         documents[i].doc_id = str(i)  # or, you can give it whatever name is relevant 
@@ -55,7 +53,7 @@ def build_chroma_index(documents, collection, reindex):
     chroma_client.persist()
 
 def refresh_chroma_index(documents, collection):
-    index, chromacollection = load_chroma_index(collection)
+    index = load_chroma_index(collection)
     for i in range(len(documents)):
         documents[i].doc_id = str(i)
     logging.info('refereshing collection ' + collection)
@@ -67,11 +65,12 @@ def refresh_chroma_index(documents, collection):
 
 def query_index(query_str, collection):
     index = None
-    index, _chroma_collection = load_chroma_index(collection)
+    _chroma_collection = get_chroma_collection(collection)
+    index = load_chroma_index(collection)
     return index.query(query_str, chroma_collection=_chroma_collection,
                        mode="embedding",
                        similarity_top_k= 3,  
-                       response_mode="compact", # default, compact, tree_summarize
+                       # response_mode="compact", # default, compact, tree_summarize
                        llm_predictor=llm_predictor, 
                        prompt_helper=prompt_helper,
                        llama_logger=llama_logger,

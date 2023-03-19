@@ -24,8 +24,8 @@ st.set_page_config(
 add_to_sidebar()
 user_collection = "markdown_notes"
 
-st.write("# Index your Markdown Notes 🧠  ")  
-st.write("Into Persistant Chroma DB  \n")
+st.write("# Index your Markdown Notes 🧠  \n")  
+st.write("### Into Persistant ChromaDB  ")
 
 def clear_submit():
     st.session_state["submit"] = False

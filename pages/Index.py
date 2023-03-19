@@ -20,7 +20,8 @@ embed_model = get_embed_model()
 llm_predictor = get_llm_predictor()
 prompt_helper = get_prompt_helper()
 
-st.write("# Index your Markdown Notes 🧠")
+st.write("# Index your Markdown Notes 🧠  \n") 
+st.write("### into GPTSimpleIndex")
 
 def clear_submit():
     st.session_state["submit"] = False

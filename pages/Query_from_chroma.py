@@ -20,7 +20,7 @@ st.set_page_config(
 add_to_sidebar()
 
 st.write("# ChatObsidian 🔍  \n")
-st.write("## Query your data")
+st.write("### Query your data from ChromaDB")
 
 def clear_submit():
     st.session_state["submit"] = False
@@ -45,8 +45,6 @@ if button or st.session_state.get("submit"):
             st.markdown(response)
             st.markdown("---\n")
             with st.expander("Sources"):
-                chroma_client = create_chroma_client()
-                chroma_collection = chroma_client.get_collection("markdown_notes")
                 st.write("documents in collection:  " + str(chroma_collection.count()))
                 st.markdown(response.get_formatted_sources())
                             
