@@ -7,8 +7,7 @@ from chromadb.config import Settings
 from llama_index import GPTChromaIndex, LangchainEmbedding, LLMPredictor, PromptHelper, OpenAIEmbedding
 from llama_index.logger import LlamaLogger
 
-from langchain.embeddings.huggingface import HuggingFaceEmbeddings
-from langchain import OpenAI
+from utils.model_settings import get_embed_model, get_llm_predictor, get_prompt_helper
 
 import logging
 
@@ -18,21 +17,9 @@ INDEX_PATH = './chroma_index.json'
 
 llama_logger = LlamaLogger()
 
-# load in HF embedding model from langchain
-model_name = "sentence-transformers/all-MiniLM-L6-v2"
-embed_model = LangchainEmbedding(HuggingFaceEmbeddings())
-
-#use default Open AI embeddings
-#embed_model = OpenAIEmbedding()
-
-# define prompt helper
-max_input_size = 4096
-num_output = 2048
-max_chunk_overlap = 20
-prompt_helper = PromptHelper(max_input_size, num_output, max_chunk_overlap)
-
-# define LLM
-llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=num_output))
+embed_model = get_embed_model()
+llm_predictor = get_llm_predictor()
+prompt_helper = get_prompt_helper()
 
 @st.cache_resource
 def create_chroma_client():

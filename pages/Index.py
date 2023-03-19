@@ -6,10 +6,19 @@ from llama_index import GPTSimpleVectorIndex
 from pathlib import Path
 from llama_index import download_loader
 
+from utils.model_settings import get_embed_model, get_llm_predictor, get_prompt_helper
+
 st.set_page_config(
     page_title="Index",
     page_icon="🧠",
 )
+add_to_sidebar()
+
+INDEX_PATH = './chroma_index.json'
+
+embed_model = get_embed_model()
+llm_predictor = get_llm_predictor()
+prompt_helper = get_prompt_helper()
 
 st.write("# Index your Markdown Notes 🧠")
 
@@ -64,14 +73,14 @@ else:
         if st.session_state.get("api_key_configured"):
             if reindex & Path('index.json').exists():
                 os.remove("index.json")
-                index = GPTSimpleVectorIndex(documents)
+                index = GPTSimpleVectorIndex(documents, embed_model=embed_model)
                 index.save_to_disk('index.json')
                 st.write("rebuilt the index - Finished indexing documents")
             elif Path('index.json').exists():
-                index = GPTSimpleVectorIndex.load_from_disk('index.json')
+                # index = GPTSimpleVectorIndex.load_from_disk('index.json', embed_model)
                 st.write("Index exists, and was not rebuilt")
             else:
-                index = GPTSimpleVectorIndex(documents)
+                index = GPTSimpleVectorIndex(documents, embed_model=embed_model)
                 index.save_to_disk('index.json')
                 st.write("Finished indexing documents")
 
@@ -79,4 +88,4 @@ else:
         st.write("Document parts:" + str(len(documents)))
         st.write(documents)
 
-add_to_sidebar()
+
