@@ -6,8 +6,9 @@ Intended for Obsidian notes vault, but you could use it for any local folder of 
 run locally with
 
 ```bash
-pipenv install \
 pipenv shell \
+pipenv install \
+export OPENAI_API_KEY=YOUR_API_KEY \
 streamlit run ChatObsidian.py
 ```
 

@@ -69,8 +69,8 @@ def query_index(query_str, collection):
     index = load_chroma_index(collection)
     return index.query(query_str, chroma_collection=_chroma_collection,
                        mode="embedding",
-                       similarity_top_k= 3,  
-                       # response_mode="compact", # default, compact, tree_summarize
+                       similarity_top_k=3,  
+                       response_mode="compact", # default, compact, tree_summarize
                        llm_predictor=llm_predictor, 
                        prompt_helper=prompt_helper,
                        llama_logger=llama_logger,
