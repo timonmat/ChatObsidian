@@ -48,7 +48,15 @@ if button or st.session_state.get("submit"):
         st.error("Please enter a question!")
     else:
         st.session_state["submit"] = True
-        response = index.query(query_str, llm_predictor=llm_predictor, prompt_helper=prompt_helper, embed_model=embed_model, mode="embedding", similarity_top_k=3, text_qa_template=QA_PROMPT, verbose=True)
+        response = index.query(query_str, 
+                               response_mode="compact", # default, compact, tree_summarize 
+                               llm_predictor=llm_predictor, 
+                               prompt_helper=prompt_helper, 
+                               embed_model=embed_model, 
+                               mode="embedding", 
+                               similarity_top_k=5, 
+                               text_qa_template=QA_PROMPT, 
+                               verbose=True)
         st.markdown(response)
         st.markdown(response.get_formatted_sources())
 
