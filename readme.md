@@ -1,8 +1,21 @@
 # ChatObsidian
 
 ChatObsidian is an Question and Answer AI integration for a folder of markdown notes.  
-Intended for Obsidian notes vault, but you could use it for any local folder of markdown files.
+Intended for Obsidian notes vault, but you could use it for any local folder of markdown files.  
+This app is for private use only. you can't upload files, and you should not run it in public. maybe on a closed local network, but even then maybe add basic auth or something.  
 
+This is very much a work in progress project, but some parts work ok already:  
+
+- index/query with gptsimpleindex works correctly. Tested with up to 3000 notes in Obsidian vault.
+- notes are indexed locally, so they're not all sent to OpenAI.
+- ...but notes related to each query are sent to OpenAI API for final synthesis. If you think this is a privacy issue, then don't use this. [OpenAI data policy](https://openai.com/policies/api-data-usage-policies)
+
+what's not working:  
+
+- Chromadb indexing only returns one note as source material, so final results are not great.  
+
+---  
+  
 run locally with
 
 ```bash
@@ -17,7 +30,8 @@ streamlit run ChatObsidian.py
 - [x] vector database integration (chroma)
 - [x] gpt3.5-turbo support (cost reduction)
 - [x] local embeddings model support (langchain/huggingface) (cost reduction, privacy)
-- [ ] local LLM support (free, privacy)
+- [ ] refresh files, instead of delete and reindex
+- [ ] local LLM support (free, privacy) Explore Alpaca 7B, when it becomes available in LangChain
 - [ ] select and configure LLM on sidebar (model and prompthelper)
 - [ ] pdf support
 - [ ] image support

@@ -14,7 +14,7 @@ st.set_page_config(
 )
 add_to_sidebar()
 
-INDEX_PATH = './chroma_index.json'
+INDEX_PATH = './index.json'
 
 embed_model = get_embed_model()
 llm_predictor = get_llm_predictor()
