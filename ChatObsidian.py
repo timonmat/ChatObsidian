@@ -1,6 +1,7 @@
 # ChatObsidian.py
 import streamlit as st
 from components.sidebar import add_to_sidebar
+import os
 
 import ptvsd
 from utils.logging import add_logging_config
@@ -13,6 +14,8 @@ st.set_page_config(
     page_title="ChatObsidian",
     page_icon="🎱",
 )
+
+os.environ["TOKENIZERS_PARALLELISM"] = 'False'
 
 add_logging_config()
 

@@ -33,6 +33,7 @@ if button or st.session_state.get("submit"):
         st.session_state["submit"] = True
         try:
             with st.spinner("Processing your query..."):
+                response = None
                 response = query_gptsimpleindex(query_str)
             st.markdown(response)
             with st.expander("Sources"):
