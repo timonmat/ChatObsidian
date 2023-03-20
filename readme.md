@@ -1,4 +1,6 @@
 # ChatObsidian
+  
+![Screenshot](./docs/screenshot1.png)
 
 ChatObsidian is an Question and Answer AI integration for a folder of markdown notes.  
 Intended for Obsidian notes vault, but you could use it for any local folder of markdown files.  
