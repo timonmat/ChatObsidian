@@ -41,12 +41,20 @@ if button or st.session_state.get("submit"):
         chroma_collection = get_chroma_collection(collection)
         if chroma_collection:
             st.sidebar.success('Collection exists')
-            response = query_index(query_str, collection)
-            st.markdown(response)
-            st.markdown("---\n")
-            with st.expander("Sources"):
-                st.write("documents in collection:  " + str(chroma_collection.count()))
-                st.markdown(response.get_formatted_sources())
+            try:
+                with st.spinner("Processing your query..."):
+                    response = query_index(query_str, collection)
+                st.markdown(response)
+                st.markdown("---\n")
+                with st.expander("Sources"):
+                    st.write("documents in collection:  " + str(chroma_collection.count()))
+                    for node in response.source_nodes:
+                        st.write(f"Document ID: {node.doc_id}")
+                        st.write(f"Source Text: {node.source_text.strip()}")
+                        st.write(f"Similarity: {node.similarity}")
+                        st.markdown("---")
+            except Exception as e:
+                st.exception(f"Error processing your query: {e}")
                             
         else:
             st.write('Collection not found')
