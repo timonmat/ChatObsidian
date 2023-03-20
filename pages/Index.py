@@ -64,7 +64,6 @@ else:
 
     # Add a button to start indexing the files
     if st.button("Index files"):
-        
         documents = []
         for file_path in files:
             doc = loader.load_data(file=file_path)

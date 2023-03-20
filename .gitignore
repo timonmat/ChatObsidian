@@ -161,6 +161,7 @@ cython_debug/
 #.idea/
 
 # ChatObsidian specific
+code.txt
 index.json
 docs_index.json
 temp/
@@ -173,3 +174,4 @@ components/__pycache__/
 
 .DS_Store
 
+testdata/code.txt

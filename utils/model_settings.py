@@ -1,5 +1,7 @@
+#model_settings.py
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from llama_index import LangchainEmbedding, LLMPredictor, PromptHelper, OpenAIEmbedding
+from langchain.chat_models import ChatOpenAI
 from langchain import OpenAI
 
 
@@ -23,5 +25,7 @@ def get_prompt_helper():
 def get_llm_predictor():
     # define LLM
     num_output = 2048
-    llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=num_output))
+    
+    #llm_predictor = LLMPredictor(llm=OpenAI(temperature=0, model_name="gpt-3.5-turbo", max_tokens=num_output))  
+    llm_predictor = LLMPredictor(ChatOpenAI(temperature=0.1, model_name="gpt-3.5-turbo", max_tokens=num_output))
     return llm_predictor
