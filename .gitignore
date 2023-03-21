@@ -160,18 +160,25 @@ cython_debug/
 #  option (not recommended) you can uncomment the following to ignore the entire idea folder.
 #.idea/
 
+# OS X
+.DS_Store
+
 # ChatObsidian specific
 code.txt
 index.json
 docs_index.json
+chroma_index.json
 temp/
 .chroma/
 .chromadb/
 chromadb/
-chroma_index.json
-components/__pycache__/
-
-
-.DS_Store
-
 testdata/code.txt
+
+icomponents/__pycache__/
+
+data/*
+!data/.gitkeep
+!data/chromadb
+data/chromadb/*
+!data/chromadb/.gitkeep
+

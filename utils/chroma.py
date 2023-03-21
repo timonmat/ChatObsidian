@@ -13,7 +13,8 @@ import logging
 
 from utils.qa_template import QA_PROMPT
 
-INDEX_PATH = './chroma_index.json'
+INDEX_PATH = './data/chroma_index.json'
+PERSIST_DIRECTORY = './data/chromadb'
 
 llama_logger = LlamaLogger()
 
@@ -23,7 +24,7 @@ prompt_helper = get_prompt_helper()
 
 @st.cache_resource
 def create_chroma_client():
-    return chromadb.Client(Settings(chroma_db_impl="duckdb+parquet",persist_directory="./chromadb"))
+    return chromadb.Client(Settings(chroma_db_impl="duckdb+parquet",persist_directory=PERSIST_DIRECTORY))
 
 def get_chroma_collection(collection_name):
     client = create_chroma_client()

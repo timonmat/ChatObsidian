@@ -14,7 +14,7 @@ st.set_page_config(
 )
 add_to_sidebar()
 
-INDEX_PATH = './index.json'
+INDEX_PATH = './data/index.json'
 
 embed_model = get_embed_model()
 llm_predictor = get_llm_predictor()
@@ -71,17 +71,17 @@ else:
                 documents.append(array_elem)
 
         if st.session_state.get("api_key_configured"):
-            if reindex & Path('index.json').exists():
-                os.remove("index.json")
+            if reindex & Path(INDEX_PATH).exists():
+                os.remove(INDEX_PATH)
                 index = GPTSimpleVectorIndex(documents, embed_model=embed_model)
-                index.save_to_disk('index.json')
+                index.save_to_disk(INDEX_PATH)
                 st.write("rebuilt the index - Finished indexing documents")
-            elif Path('index.json').exists():
-                # index = GPTSimpleVectorIndex.load_from_disk('index.json', embed_model)
+            elif Path(INDEX_PATH).exists():
+                # index = GPTSimpleVectorIndex.load_from_disk(INDEX_PATH, embed_model)
                 st.write("Index exists, and was not rebuilt")
             else:
                 index = GPTSimpleVectorIndex(documents, embed_model=embed_model)
-                index.save_to_disk('index.json')
+                index.save_to_disk(INDEX_PATH)
                 st.write("Finished indexing documents")
 
         

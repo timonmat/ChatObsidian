@@ -7,7 +7,7 @@ import os
 import streamlit as st
 from pathlib import Path
 
-DOCS_PATH = './docs_index.json'
+DOCS_PATH = './data/docs_index.json'
 
 def create_docs_index(documents_folder):
     if Path(DOCS_PATH).exists():
