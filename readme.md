@@ -8,7 +8,8 @@ This app is for private use only. you can't upload files, and you should not run
 
 This is very much a work in progress project, but some parts work ok already:  
 
-- index/query with gptsimpleindex works correctly. Tested with up to 3000 notes in Obsidian vault.
+- index/query with gptsimpleindex works correctly. Tested with up to 10000 notes in Obsidian vault.
+- indexing to chromadb now works too. chromadb will be fixed in next llama_index release.
 - notes are indexed locally, so they're not all sent to OpenAI.
 - ...but notes related to each query are sent to OpenAI API for final synthesis. If you think this is a privacy issue, then don't use this. [OpenAI data policy](https://openai.com/policies/api-data-usage-policies)
 
@@ -33,6 +34,7 @@ streamlit run ChatObsidian.py
 - [x] gpt3.5-turbo support (cost reduction)
 - [x] local embeddings model support (langchain/huggingface) (cost reduction, privacy)
 - [ ] refresh files, instead of delete and reindex
+- [ ] just semantic search of files, and open in obsidian (advanced_uri).
 - [ ] local LLM support (free, privacy) Explore Alpaca 7B, when it becomes available in LangChain
 - [ ] select and configure LLM on sidebar (model and prompthelper)
 - [ ] pdf support

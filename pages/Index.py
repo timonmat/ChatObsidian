@@ -7,6 +7,9 @@ from pathlib import Path
 from llama_index import download_loader
 
 from utils.model_settings import get_embed_model, get_llm_predictor, get_prompt_helper
+from utils.loaders_helper import load_docs_with_sdr, clean_filenames_for_obsidian
+from utils.files_helper import get_file_list
+from utils.GPTSimple import index_gptsimpleindex
 
 st.set_page_config(
     page_title="Index",
@@ -29,18 +32,14 @@ def clear_submit():
 def form_callback():
     st.session_state.FOLDER_PATH
 
-
-MarkdownReader = download_loader("MarkdownReader")
-loader = MarkdownReader()
-
 if 'FOLDER_PATH' not in st.session_state:
-    st.session_state['FOLDER_PATH'] = './testdata'
+    st.session_state['FOLDER_PATH'] = 'testdata/'
 
 folder_path = st.text_input(
             "Obsidian Folder to scan for notes",
             type="default",
             key='FOLDER_PATH',
-            placeholder="/Users/mattitimonen/Library/Mobile Documents/iCloud~md~obsidian/Documents/Obsidian Notes",
+            placeholder="/Users/whoever/Library/Mobile Documents/iCloud~md~obsidian/Documents/ObsidianVaultName/",
             help="/Users/xx/Library...",  # noqa: E501
             value=st.session_state.get("FOLDER_PATH", ""),
             on_change=form_callback,
@@ -48,11 +47,9 @@ folder_path = st.text_input(
 
 
 # Get the list of files in the selected folder and its subdirectories
+
 files = []
-for root, dirs, dir_files in os.walk(folder_path):
-    for file in dir_files:
-        if file.endswith(".md"):
-             files.append(os.path.join(root, file))
+files = get_file_list(folder_path)
 
 if len(files) == 0:
     st.write(f"No Markdown files found in {folder_path}")
@@ -65,27 +62,25 @@ else:
     # Add a button to start indexing the files
     if st.button("Index files"):
         documents = []
-        for file_path in files:
-            doc = loader.load_data(file=file_path)
-            for array_elem in doc:
-                documents.append(array_elem)
+        documents = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
+
 
         if st.session_state.get("api_key_configured"):
-            if reindex & Path(INDEX_PATH).exists():
-                os.remove(INDEX_PATH)
-                index = GPTSimpleVectorIndex(documents, embed_model=embed_model)
-                index.save_to_disk(INDEX_PATH)
-                st.write("rebuilt the index - Finished indexing documents")
+            if reindex:
+                st.write("deleting and rebuilding the index")
+                with st.spinner("Indexing..."):
+                    index_gptsimpleindex(documents, reindex)
+                st.write("Finished indexing documents")
             elif Path(INDEX_PATH).exists():
-                # index = GPTSimpleVectorIndex.load_from_disk(INDEX_PATH, embed_model)
                 st.write("Index exists, and was not rebuilt")
             else:
-                index = GPTSimpleVectorIndex(documents, embed_model=embed_model)
-                index.save_to_disk(INDEX_PATH)
+                st.write("building the index")
+                with st.spinner("Indexing..."):
+                        index_gptsimpleindex(documents, reindex)
                 st.write("Finished indexing documents")
 
         
         st.write("Document parts:" + str(len(documents)))
-        st.write(documents)
+        # st.write(documents)
 
 

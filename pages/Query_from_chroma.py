@@ -6,6 +6,7 @@ from chromadb.config import Settings
 from llama_index.readers.chroma import ChromaReader
 from llama_index.indices import GPTListIndex
 from pathlib import Path
+import urllib.parse
 
 from components.sidebar import add_to_sidebar
 from utils.qa_template import QA_PROMPT
@@ -47,11 +48,17 @@ if button or st.session_state.get("submit"):
                 st.markdown(response)
                 st.markdown("---\n")
                 with st.expander("Sources"):
-                    st.write("documents in collection:  " + str(chroma_collection.count()))
+                    st.markdown("documents in collection:  " + str(chroma_collection.count()))
                     for node in response.source_nodes:
-                        st.write(f"Document ID: {node.doc_id}")
-                        st.write(f"Source Text: {node.source_text.strip()}")
-                        st.write(f"Similarity: {node.similarity}")
+                        st.markdown(f"Document ID: {node.doc_id}")
+                        doc, filename, content = node.source_text.strip().split('\n\n', 2)
+                        filename = filename.split(': ')[1]
+                        content = content.strip()
+                        # st.write(f"Filename: {filename}")
+                        url = (f'obsidian://open?file={urllib.parse.quote(filename)}')
+                        st.markdown(f"Filename: {filename}  [link]({url})", unsafe_allow_html=True)
+                        st.markdown(f"Source Text: {content}")
+                        st.markdown(f"Similarity: {node.similarity}")
                         st.markdown("---")
             except Exception as e:
                 st.exception(f"Error processing your query: {e}")

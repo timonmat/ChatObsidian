@@ -46,8 +46,6 @@ def build_chroma_index(documents, collection, reindex):
         chroma_client.reset()
         
     _chroma_collection = chroma_client.get_or_create_collection(collection)
-    for i in range(len(documents)):
-        documents[i].doc_id = str(i)  # or, you can give it whatever name is relevant 
     index = None
     index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, embed_model=embed_model, prompt_helper=prompt_helper, chunk_size_limit=512)
     index.save_to_disk(INDEX_PATH)
@@ -55,8 +53,6 @@ def build_chroma_index(documents, collection, reindex):
 
 def refresh_chroma_index(documents, collection):
     index = load_chroma_index(collection)
-    for i in range(len(documents)):
-        documents[i].doc_id = str(i)
     logging.info('refereshing collection ' + collection)
     refreshed_docs = index.refresh(documents)
     index.save_to_disk(INDEX_PATH)
