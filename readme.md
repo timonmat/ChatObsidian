@@ -33,8 +33,9 @@ streamlit run ChatObsidian.py
 - [x] vector database integration (chroma)
 - [x] gpt3.5-turbo support (cost reduction)
 - [x] local embeddings model support (langchain/huggingface) (cost reduction, privacy)
+- [x] open sources in obsidian via uri
 - [ ] refresh files, instead of delete and reindex
-- [ ] just semantic search of files, and open in obsidian (advanced_uri).
+- [ ] just semantic search of files (no_text config)
 - [ ] local LLM support (free, privacy) Explore Alpaca 7B, when it becomes available in LangChain
 - [ ] select and configure LLM on sidebar (model and prompthelper)
 - [ ] pdf support

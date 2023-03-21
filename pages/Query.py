@@ -38,14 +38,14 @@ if button or st.session_state.get("submit"):
             with st.expander("Sources"):
                 for node in response.source_nodes:
                     st.markdown(f"Document ID: {node.doc_id}")
-                    #doc, filename, content = node.source_text.split('\n\n', 2)
-                    #filename = filename.split(': ')[1]
-                    #content = content.strip()
+                    filename, content = node.source_text.split('\n\n', 1)
+                    filename = filename.split(': ')[1]
+                    content = content.strip()
                     # st.write(f"Filename: {filename}")
-                    #url = (f'obsidian://open?file={urllib.parse.quote(filename)}')
-                    #st.markdown(f"Filename: {filename}  [link]({url})", unsafe_allow_html=True)
-                    #st.markdown(f"Source Text: {content}")
-                    st.write(f"Source Text: {node.source_text.strip()}")
+                    url = (f'obsidian://open?file={urllib.parse.quote(filename)}')
+                    st.markdown(f"Filename: {filename}  [link]({url})", unsafe_allow_html=True)
+                    st.markdown(f"Source Text: {content}")
+                    #st.write(f"Source Text: {node.source_text.strip()}")
                     st.markdown(f"Similarity: {node.similarity}")
                     st.markdown("---")
         except Exception as e:
