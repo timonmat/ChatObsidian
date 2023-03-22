@@ -40,14 +40,16 @@ def load_chroma_index(collection):
         index = None
     return index
 
-def build_chroma_index(documents, collection, reindex):
+def build_chroma_index(documents, collection, reindex=False, chunk_size_limit=512):
     chroma_client = create_chroma_client()
     if reindex is True:
         chroma_client.reset()
         
     _chroma_collection = chroma_client.get_or_create_collection(collection)
     index = None
-    index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, embed_model=embed_model, prompt_helper=prompt_helper, chunk_size_limit=512)
+    index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, 
+                           embed_model=embed_model, prompt_helper=prompt_helper, 
+                           chunk_size_limit=chunk_size_limit)
     index.save_to_disk(INDEX_PATH)
     chroma_client.persist()
 
@@ -60,21 +62,23 @@ def refresh_chroma_index(documents, collection):
     chroma_client.persist()
     return refreshed_docs
 
-def query_index(query_str, collection):
+
+def query_index(query_str, collection, similarity_top_k=5, response_mode='compact', streaming=False ):
+    
     index = None
     _chroma_collection = get_chroma_collection(collection)
     index = load_chroma_index(collection)
     return index.query(query_str, chroma_collection=_chroma_collection,
                        mode="embedding",
-                       similarity_top_k=3,  
-                       response_mode="compact", # default, compact, tree_summarize, no_text
+                       similarity_top_k=similarity_top_k,  
+                       response_mode=response_mode, # default, compact, tree_summarize, no_text
                        llm_predictor=llm_predictor, 
                        prompt_helper=prompt_helper,
                        llama_logger=llama_logger,
                        text_qa_template=QA_PROMPT,
                        verbose= True, 
                        use_async= True,
-                       streaming= False
+                       streaming= streaming
                        )
 
 
