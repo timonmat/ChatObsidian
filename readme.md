@@ -13,6 +13,8 @@ This is very much a work in progress project, but some parts work ok already:
 - Semantic Search is local only, so does not require OpenAI key... indexing doesn't use it either, so any string prob works. 
 - ...but notes related to each Query from Query page are sent to OpenAI API for final synthesis. If you think this is a privacy issue, then don't use it. [OpenAI data policy](https://openai.com/policies/api-data-usage-policies)
 
+- EXPERIMENTAL: embedding model selection. always need to use the same for all. index/search/query. not saving iy currently.
+
 
 ---  
   

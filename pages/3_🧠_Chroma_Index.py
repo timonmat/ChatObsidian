@@ -14,6 +14,7 @@ from utils.chroma import (build_chroma_index,
 from utils.loaders_helper import load_docs_with_sdr, clean_filenames_for_obsidian
 from utils.refresh_manager import create_docs_index, load_docs_index, refresh_docs_index
 from utils.files_helper import get_file_list
+from utils.model_settings import get_sentence_transformer_dropdown
 import logging
 
 
@@ -46,8 +47,9 @@ folder_path = st.text_input(
             value=st.session_state.get("FOLDER_PATH", ""),
             on_change=form_callback,
         )
-st.expander("Advanced Options")
-reindex = st.checkbox("Delete existing index, and re-index")
+with st.expander("Advanced Options"):
+    reindex = st.checkbox("Delete existing index, and re-index")
+    model_name = get_sentence_transformer_dropdown()
 
 
 
@@ -87,11 +89,11 @@ with col1:# Add a button to start indexing the files
                 placeholder.write("will remove and rebuild")
                 with st.spinner("Indexing..."):
                     create_docs_index(folder_path)
-                    build_chroma_index(documents, collection, reindex)
+                    build_chroma_index(documents, collection, reindex=reindex, model_name=model_name)
                 with placeholder:
                     st.write("Finished indexing documents")
                     st.write("Document count:" + str(len(documents)))
-                debug.code(documents)
+                # debug.code(documents)
                     
         else:
             st.error("set your api key first")

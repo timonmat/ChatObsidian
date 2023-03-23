@@ -7,7 +7,7 @@ from chromadb.config import Settings
 from llama_index import GPTChromaIndex, LangchainEmbedding, LLMPredictor, PromptHelper, OpenAIEmbedding
 from llama_index.logger import LlamaLogger
 
-from utils.model_settings import get_embed_model, get_llm_predictor, get_prompt_helper
+from utils.model_settings import get_embed_model, get_llm_predictor, get_prompt_helper, sentenceTransformers
 
 import logging
 
@@ -40,7 +40,7 @@ def load_chroma_index(collection):
         index = None
     return index
 
-def build_chroma_index(documents, collection, reindex=False, chunk_size_limit=512):
+def build_chroma_index(documents, collection, reindex=False, chunk_size_limit=512, model_name='sentence-transformers/all-MiniLM-L6-v2'):
     chroma_client = create_chroma_client()
     if reindex is True:
         chroma_client.reset()
@@ -48,7 +48,7 @@ def build_chroma_index(documents, collection, reindex=False, chunk_size_limit=51
     _chroma_collection = chroma_client.get_or_create_collection(collection)
     index = None
     index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, 
-                           embed_model=embed_model, prompt_helper=prompt_helper, 
+                           embed_model=get_embed_model(model_name), prompt_helper=prompt_helper, 
                            chunk_size_limit=chunk_size_limit)
     index.save_to_disk(INDEX_PATH)
     chroma_client.persist()
@@ -63,7 +63,7 @@ def refresh_chroma_index(documents, collection):
     return refreshed_docs
 
 
-def query_index(query_str, collection, similarity_top_k=5, response_mode='compact', streaming=False ):
+def query_index(query_str, collection, similarity_top_k=5, response_mode='compact', streaming=False, model_name=sentenceTransformers.OPTION1):
     
     index = None
     _chroma_collection = get_chroma_collection(collection)
@@ -72,6 +72,7 @@ def query_index(query_str, collection, similarity_top_k=5, response_mode='compac
                        mode="embedding",
                        similarity_top_k=similarity_top_k,  
                        response_mode=response_mode, # default, compact, tree_summarize, no_text
+                       embed_model=get_embed_model(model_name),
                        llm_predictor=llm_predictor, 
                        prompt_helper=prompt_helper,
                        llama_logger=llama_logger,

@@ -1,13 +1,24 @@
 #model_settings.py
+import streamlit as st
 from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from llama_index import LangchainEmbedding, LLMPredictor, PromptHelper, OpenAIEmbedding
 from langchain.chat_models import ChatOpenAI
 from langchain import OpenAI
+from enum import Enum
 
+class sentenceTransformers(Enum):
+    OPTION1 = "sentence-transformers/all-MiniLM-L6-v2"
+    OPTION2 = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
+    OPTION3 = "sentence-transformers/all-mpnet-base-v2"
 
-def get_embed_model():
+def get_sentence_transformer_dropdown():
+    options = [e.value for e in sentenceTransformers]
+    selected_option = st.selectbox("Sentence transformer:", options)
+    return selected_option
+
+def get_embed_model(model_name='sentence-transformers/all-MiniLM-L6-v2'):
     # load in HF embedding model from langchain
-    model_name = "sentence-transformers/all-MiniLM-L6-v2"           # sentence-transformers/all-mpnet-base-v2,  sentence-transformers/all-MiniLM-L6-v2
+    # sentence-transformers/all-mpnet-base-v2,  sentence-transformers/all-MiniLM-L6-v2, sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2
     embed_model = LangchainEmbedding(HuggingFaceEmbeddings(model_name=model_name))
 
     #use default Open AI embeddings
