@@ -9,10 +9,12 @@ from pathlib import Path
 import urllib.parse
 
 from components.sidebar import add_to_sidebar
-from utils.qa_template import QA_PROMPT
+from components.ui import collection_selection_ui
 
+from utils.qa_template import QA_PROMPT
 from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, query_index, get_logger
 from utils.model_settings import get_sentence_transformer_dropdown
+import utils.tinydb as userdata
 
 st.set_page_config(
     page_title="Query",
@@ -31,12 +33,20 @@ clear_submit()
 
 def similarity_slider(similarity_top_k=3):
     return st.slider("Number of results to get", value=similarity_top_k, max_value=7)
-    
+
+# Collection selection UI
+st.subheader('Select an existing collection')
+selected_collection, collection_data = collection_selection_ui(userdata.get_collections())
+
+if collection_data:
+    folder_path = collection_data['folder_path']
+    model_name = collection_data['model_name']
+    collection = collection_data['name']    
 
 query_str = st.text_area("Ask a question about your Markdown notes", on_change=clear_submit)
 with st.expander("Advanced Options"):
     similarity_top_k = similarity_slider()
-    model_name = get_sentence_transformer_dropdown()
+
 
 button = st.button("Submit")
 if button or st.session_state.get("submit"):
@@ -46,7 +56,6 @@ if button or st.session_state.get("submit"):
         st.error("Please enter a question!")
     else:
         st.session_state["submit"] = True
-        collection = "markdown_notes"
         index = None
         chroma_collection = get_chroma_collection(collection)
         if chroma_collection:

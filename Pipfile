@@ -8,6 +8,7 @@ streamlit = "*"
 llama_index = "*"
 chromadb = "*"
 watchdog = "*"
+tinydb = "*"
 
 [dev-packages]
 
