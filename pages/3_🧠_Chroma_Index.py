@@ -73,7 +73,7 @@ debug = st.empty()
 col1, col2, col3 = st.columns([2,1,1])
 with col2:
     if st.button("Refresh index [wip]"):
-        docs = load_docs_with_sdr(folder_path)
+        docs = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
         refreshed_documents = refresh_chroma_index(docs, collection)
         with statusbar:
             st.write("Refreshed, and added documents:  ")

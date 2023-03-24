@@ -33,11 +33,13 @@ streamlit run ChatObsidian.py
 - [x] gpt3.5-turbo support (cost reduction)
 - [x] local embeddings model support (langchain/huggingface) (cost reduction, privacy)
 - [x] open sources in obsidian via uri
-- [ ] refresh files, instead of delete and reindex
+- [x] multi collection support (collection per folder. saves embedding model used)
 - [x] just semantic search of files (no_text config)
+- [x] Local embedding model switching (multilingual model)
+- [ ] refresh files, instead of delete and reindex
 - [ ] local LLM support (free, privacy) Explore Alpaca 7B, when it becomes available in LangChain
 - [ ] select and configure LLM on sidebar (model and prompthelper)
 - [ ] pdf support
 - [ ] image support
 - [ ] docker support (folder mapping would suck a bit. maybe map to a default './data/obsidianvault')
-- [ ] multi collection support (collection per vault folder? select which folders to index)
+

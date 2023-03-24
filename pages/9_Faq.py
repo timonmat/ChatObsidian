@@ -16,9 +16,14 @@ def faq():
 
 ## How does ChatObsidian work?
 The folder entered on Index page is recursively searched for Markdown files, which are chunked and
-indexed with OpenAI embeddings services. The index is saved locally.
+indexed with locally run selectable Huggingface models. The index is saved locally.
 When asking a question, embeddings are retrieved for the question, and semantically relevant chunks are retrieved from the index context.
 both the question and context are provided with a template to OpenAI GPT which generates the final answer.
+
+## What's the Search page  
+Nothing fancy. Just semantic search based on vectorization of bothh data and search terms. i.e a search for green and forest,
+will likely find notes about trees even when the terms used in the search queery are not in the data. so... similar things are found.
+...well, maybe it's a bit fancy.
 
 ## QA assistant prompt template
 You can modify the prompt template to make GPT3 work in a way better suited to your Notes content by modifying the file /utils/qa_template.py 
