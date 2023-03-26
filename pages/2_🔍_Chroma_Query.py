@@ -1,11 +1,11 @@
 #Query_from_chroma.py
 import streamlit as st
-from llama_index import GPTSimpleVectorIndex, GPTChromaIndex
-import chromadb
-from chromadb.config import Settings
-from llama_index.readers.chroma import ChromaReader
-from llama_index.indices import GPTListIndex
-from pathlib import Path
+
+st.set_page_config(
+    page_title="Query",
+    page_icon="🔍",
+)
+
 import urllib.parse
 
 from components.sidebar import add_to_sidebar
@@ -16,10 +16,6 @@ from utils.chroma import create_chroma_client, get_chroma_collection, load_chrom
 from utils.model_settings import get_sentence_transformer_dropdown
 import utils.tinydb as userdata
 
-st.set_page_config(
-    page_title="Query",
-    page_icon="🔍",
-)
 
 add_to_sidebar()
 

@@ -1,8 +1,10 @@
 #Index_to_chroma.py
 import streamlit as st
-import os
 
-from pathlib import Path
+st.set_page_config(
+    page_title="Index",
+    page_icon="🧠",
+)
 
 from components.sidebar import add_to_sidebar
 from components.ui import folder_path_input_box, collection_selection_ui, create_new_collection_ui
@@ -13,17 +15,14 @@ from utils.chroma import (build_chroma_index,
                           create_or_refresh_chroma_index
                           )
 from utils.loaders_helper import load_docs_with_sdr, clean_filenames_for_obsidian
-from utils.refresh_manager import create_docs_index, load_docs_index, refresh_docs_index
+
 from utils.files_helper import get_file_list
-from utils.model_settings import get_sentence_transformer_dropdown
+
 import logging
 import utils.tinydb as userdata
 
 
-st.set_page_config(
-    page_title="Index",
-    page_icon="🧠",
-)
+
 
 add_to_sidebar()
 

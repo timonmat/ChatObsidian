@@ -1,10 +1,9 @@
 #Index.py
 import streamlit as st
-import os
+
 from components.sidebar import add_to_sidebar
-from llama_index import GPTSimpleVectorIndex
+
 from pathlib import Path
-from llama_index import download_loader
 
 from utils.model_settings import get_embed_model, get_llm_predictor, get_prompt_helper
 from utils.loaders_helper import load_docs_with_sdr, clean_filenames_for_obsidian
@@ -15,6 +14,7 @@ st.set_page_config(
     page_title="Index",
     page_icon="🧠",
 )
+
 add_to_sidebar()
 
 INDEX_PATH = './data/index.json'

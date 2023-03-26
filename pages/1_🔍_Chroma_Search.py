@@ -1,24 +1,21 @@
 #Query_from_chroma.py
 import streamlit as st
-from llama_index import GPTSimpleVectorIndex, GPTChromaIndex
-import chromadb
-from chromadb.config import Settings
-from llama_index.readers.chroma import ChromaReader
-from llama_index.indices import GPTListIndex
-from pathlib import Path
-import urllib.parse
-
-from components.sidebar import add_to_sidebar
-from utils.qa_template import QA_PROMPT
-from utils.model_settings import get_sentence_transformer_dropdown
-from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, query_index, get_logger
-import utils.tinydb as userdata
-from components.ui import collection_selection_ui
 
 st.set_page_config(
     page_title="Search",
     page_icon="🔍",
 )
+
+import urllib.parse
+
+from components.sidebar import add_to_sidebar
+from utils.qa_template import QA_PROMPT
+
+from utils.chroma import get_chroma_collection, query_index, get_logger
+import utils.tinydb as userdata
+from components.ui import collection_selection_ui
+
+
 
 add_to_sidebar()
 
