@@ -69,7 +69,8 @@ with st.expander("Advanced Options"):
 
 statusbar = st.empty()
 if folder_path:
-    files = get_file_list(folder_path)
+    with st.spinner("Reading the directory"):
+        files = get_file_list(folder_path)
     with statusbar:
         if len(files) == 0:
             st.write(f"No Markdown files found in {folder_path}")
@@ -95,7 +96,8 @@ with col3:
 with col1:# Add a button to start indexing the files
     if st.button("Create or refresh collection"):
         documents = []
-        documents = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
+        with st.spinner("Reading the files..."):
+            documents = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
         
         if st.session_state.get("api_key_configured"): # not needed for local embeddings
             if get_chroma_collection(collection) and reindex is not True:
