@@ -24,10 +24,9 @@ st.set_page_config(
     page_title="Index",
     page_icon="🧠",
 )
+
 add_to_sidebar()
-# if 'FOLDER_PATH' not in st.session_state:
-#     st.session_state['FOLDER_PATH'] = 'testdata/'
-# folder_path=st.session_state.get('FOLDER_PATH')
+
 folder_path = None
 
 st.write("# Index your Markdown Notes 🧠  \n")  
@@ -35,9 +34,6 @@ st.write("### Into Persistant ChromaDB  ")
 
 def clear_submit():
     st.session_state["submit"] = False
-
-# get user collections
-collections = userdata.get_collections()
 
 # Collection selection UI
 st.subheader('Select an existing collection')
@@ -95,25 +91,28 @@ with col3:
 
 with col1:# Add a button to start indexing the files
     if st.button("Create or refresh collection"):
-        documents = []
-        with st.spinner("Reading the files..."):
-            documents = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
-        
-        if st.session_state.get("api_key_configured"): # not needed for local embeddings
-            if get_chroma_collection(collection) and reindex is not True:
-                placeholder.write("Index exists, and will be refreshed")
-            elif not get_chroma_collection(collection) or reindex is True:
-                placeholder.write("will remove and rebuild")
-            with st.spinner("Indexing..."):
-                # create_docs_index(folder_path)
-                create_or_refresh_chroma_index(documents, collection, reindex=reindex, model_name=model_name)
-            with placeholder:
-                st.write("Finished indexing documents")
-                st.write(f'{str(len(documents))} chunks in {collection} ')
-                # debug.code(documents)
-                    
+        if folder_path:
+            documents = []
+            with st.spinner("Reading the files..."):
+                documents = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
+            
+            if st.session_state.get("api_key_configured"): # not needed for local embeddings
+                if get_chroma_collection(collection) and reindex is not True:
+                    placeholder.write("Index exists, and will be refreshed")
+                elif not get_chroma_collection(collection) or reindex is True:
+                    placeholder.write("will remove and rebuild")
+                with st.spinner("Indexing..."):
+                    # create_docs_index(folder_path)
+                    create_or_refresh_chroma_index(documents, collection, reindex=reindex, model_name=model_name)
+                with placeholder:
+                    st.write("Finished indexing documents")
+                    st.write(f'{str(len(documents))} chunks in {collection} ')
+                    # debug.code(documents)
+                        
+            else:
+                st.error("Set your api key first")
         else:
-            st.error("set your api key first")
+            st.error("No folder path defined")
     
 
 

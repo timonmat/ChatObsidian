@@ -91,7 +91,7 @@ def create_or_refresh_chroma_index(documents, collection, reindex=False, chunk_s
 def refresh_chroma_index(documents, collection):
     collection_index_path = get_collection_index_path(collection)
     index = load_chroma_index(collection)
-    logging.info('refereshing collection ' + collection)
+    logging.info('refreshing collection ' + collection)
     refreshed_docs = index.refresh(documents)
     index.save_to_disk(collection_index_path)
     chroma_client = create_chroma_client()
@@ -135,6 +135,6 @@ def generate_chroma_compliant_name(name: str) -> str:
     # Truncate or pad the name to be between 3 and 63 characters
     new_name = new_name[:63]
     while len(new_name) < 3:
-        new_name += "_"
+        new_name += "0"
 
     return new_name

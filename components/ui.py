@@ -25,11 +25,14 @@ def folder_path_input_box():
 
 # Function to generate collection selection UI
 def collection_selection_ui(collections):
-    selected_collection = st.selectbox('Select a collection', [''] + collections, index=0)
+    indexnumber = 1 if len(collections) >= 1 else 0 
+    selected_collection = st.selectbox('Select a collection', 
+                                       [''] + collections, 
+                                       index=indexnumber 
+                                       )
     if selected_collection:
         collection_data = userdata.load_collection_data(selected_collection)
-        st.write(f"Folder path: \'{collection_data['folder_path']}\' ,Model name: {collection_data['model_name']}")
-
+        #st.write(f"Folder path: \'{collection_data['folder_path']}\' ,Model name: {collection_data['model_name']}")
         return collection_data
     else:
         return None
@@ -53,6 +56,7 @@ def create_new_collection_ui():
                 }
             userdata.add_collection(collection_data)
             st.success(f"Created new collection: {new_collection_name}")
+            st.experimental_rerun()
             
         else:
             st.error(f"Collection with name {new_collection_name} already exists.")

@@ -37,7 +37,7 @@ streamlit run ChatObsidian.py
 - [x] just semantic search of files (no_text config)
 - [x] Local embedding model switching (multilingual model)
 - [ ] add custom embedding models from ui. (maybe save to tinydb collection)
-- [ ] refresh files, instead of delete and reindex
+- [x] refresh files, instead of delete and reindex
 - [ ] local LLM support (free, privacy) Explore Alpaca 7B, when it becomes available in LangChain
 - [ ] select and configure LLM on sidebar (model and prompthelper)
 - [ ] filetypes support support to folder config. checkbox for simpledirectoryreader supported filetypes. save to collection settings. 
