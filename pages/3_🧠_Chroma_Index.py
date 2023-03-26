@@ -9,7 +9,8 @@ from components.ui import folder_path_input_box, collection_selection_ui, create
 from utils.chroma import (build_chroma_index, 
                           persist_chroma_index,
                           refresh_chroma_index,
-                          get_chroma_collection
+                          get_chroma_collection,
+                          create_or_refresh_chroma_index
                           )
 from utils.loaders_helper import load_docs_with_sdr, clean_filenames_for_obsidian
 from utils.refresh_manager import create_docs_index, load_docs_index, refresh_docs_index
@@ -23,10 +24,11 @@ st.set_page_config(
     page_title="Index",
     page_icon="🧠",
 )
-
 add_to_sidebar()
-
-
+# if 'FOLDER_PATH' not in st.session_state:
+#     st.session_state['FOLDER_PATH'] = 'testdata/'
+# folder_path=st.session_state.get('FOLDER_PATH')
+folder_path = None
 
 st.write("# Index your Markdown Notes 🧠  \n")  
 st.write("### Into Persistant ChromaDB  ")
@@ -39,20 +41,25 @@ collections = userdata.get_collections()
 
 # Collection selection UI
 st.subheader('Select an existing collection')
-selected_collection, collection_data = collection_selection_ui(collections)
-logging.info(selected_collection)
+collection_data = collection_selection_ui(userdata.get_collections())
 
 if collection_data:
+    name = collection_data['name']
     folder_path = collection_data['folder_path']
     model_name = collection_data['model_name']
-    collection = collection_data['name']
+    collection = collection_data['index_name']
 else:
     #folder_path = folder_path_input_box()
     #model_name = get_sentence_transformer_dropdown()
 
     # Create a new collection UI
     with st.expander("Create New Collection"):
-        collection, folder_path, model_name = create_new_collection_ui()
+        collection_data = create_new_collection_ui()
+        if collection_data:
+            name = collection_data['name']
+            folder_path = collection_data['folder_path']
+            model_name = collection_data['model_name']
+            collection = collection_data['index_name']
 
 # folder_path = folder_path_input_box()
 
@@ -61,23 +68,24 @@ with st.expander("Advanced Options"):
     # model_name = get_sentence_transformer_dropdown()
 
 statusbar = st.empty()
-files = get_file_list(folder_path)
-with statusbar:
-    if len(files) == 0:
-        st.write(f"No Markdown files found in {folder_path}")
-    else:
-        st.write(f"Found {len(files)} Markdown files in {folder_path}")
+if folder_path:
+    files = get_file_list(folder_path)
+    with statusbar:
+        if len(files) == 0:
+            st.write(f"No Markdown files found in {folder_path}")
+        else:
+            st.write(f"Found {len(files)} Markdown files in {folder_path}")
 
 placeholder = st.empty()
 debug = st.empty()
 col1, col2, col3 = st.columns([2,1,1])
-with col2:
-    if st.button("Refresh index [wip]"):
-        docs = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
-        refreshed_documents = refresh_chroma_index(docs, collection)
-        with statusbar:
-            st.write("Refreshed, and added documents:  ")
-            st.write(refreshed_documents)    
+# with col2:
+    # if st.button("Refresh index [wip]"):
+    #     docs = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
+    #     refreshed_documents = refresh_chroma_index(docs, collection)
+    #     with statusbar:
+    #         st.write("Refreshed, and added documents:  ")
+    #         st.write(refreshed_documents)    
 with col3:
     if st.button("Force persist chromadb"):
         persist_chroma_index()
@@ -85,21 +93,21 @@ with col3:
             st.write("Persisted Chroma DB to disk.")    
 
 with col1:# Add a button to start indexing the files
-    if st.button("Index files"):
+    if st.button("Create or refresh collection"):
         documents = []
         documents = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
         
         if st.session_state.get("api_key_configured"): # not needed for local embeddings
             if get_chroma_collection(collection) and reindex is not True:
-                placeholder.write("Index exists, and was not recreated")
+                placeholder.write("Index exists, and will be refreshed")
             elif not get_chroma_collection(collection) or reindex is True:
                 placeholder.write("will remove and rebuild")
-                with st.spinner("Indexing..."):
-                    # create_docs_index(folder_path)
-                    build_chroma_index(documents, collection, reindex=reindex, model_name=model_name)
-                with placeholder:
-                    st.write("Finished indexing documents")
-                    st.write("Document count:" + str(len(documents)))
+            with st.spinner("Indexing..."):
+                # create_docs_index(folder_path)
+                create_or_refresh_chroma_index(documents, collection, reindex=reindex, model_name=model_name)
+            with placeholder:
+                st.write("Finished indexing documents")
+                st.write(f'{str(len(documents))} chunks in {collection} ')
                 # debug.code(documents)
                     
         else:

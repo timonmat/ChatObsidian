@@ -1,5 +1,7 @@
 # chroma.py
 import streamlit as st
+import os
+import re
 from pathlib import Path
 
 import chromadb
@@ -16,14 +18,18 @@ from utils.qa_template import QA_PROMPT
 def get_collection_index_path(collection):
     return (f'./data/{collection}-index.json')
 
+@st.cache_resource
+def get_logger():
+    llama_logger = LlamaLogger()
+    return llama_logger
+
 # INDEX_PATH = './data/chroma_index.json'
 PERSIST_DIRECTORY = './data/chromadb'
-
-llama_logger = LlamaLogger()
 
 embed_model = get_embed_model()
 llm_predictor = get_llm_predictor()
 prompt_helper = get_prompt_helper()
+llama_logger = get_logger()
 
 @st.cache_resource
 def create_chroma_client():
@@ -55,14 +61,32 @@ def build_chroma_index(documents, collection, reindex=False, chunk_size_limit=51
     chroma_client = create_chroma_client()
     if reindex is True:
         chroma_client.delete_collection(collection)
-        
+        os.remove(get_collection_index_path(collection))
     _chroma_collection = chroma_client.get_or_create_collection(collection)
     index = None
     index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, 
-                           embed_model=get_embed_model(model_name), prompt_helper=prompt_helper, 
-                           chunk_size_limit=chunk_size_limit)
+                        embed_model=get_embed_model(model_name), prompt_helper=prompt_helper, 
+                        chunk_size_limit=chunk_size_limit)
     index.save_to_disk(collection_index_path)
     chroma_client.persist()
+
+
+def create_or_refresh_chroma_index(documents, collection, reindex=False, chunk_size_limit=512, model_name='sentence-transformers/all-MiniLM-L6-v2'):
+    collection_index_path = get_collection_index_path(collection)
+    chroma_client = create_chroma_client()
+    if not Path(collection_index_path).exists() or reindex is True: 
+        if reindex is True:
+            chroma_client.delete_collection(collection)
+            os.remove(get_collection_index_path(collection))
+        _chroma_collection = chroma_client.get_or_create_collection(collection)
+        index = None
+        index = GPTChromaIndex(documents, chroma_collection=_chroma_collection, 
+                            embed_model=get_embed_model(model_name), prompt_helper=prompt_helper, 
+                            chunk_size_limit=chunk_size_limit)
+        index.save_to_disk(collection_index_path)
+        chroma_client.persist()
+    else:
+        refresh_chroma_index(documents, collection)
 
 def refresh_chroma_index(documents, collection):
     collection_index_path = get_collection_index_path(collection)
@@ -94,11 +118,23 @@ def query_index(query_str, collection, similarity_top_k=5, response_mode='compac
                        streaming= streaming
                        )
 
-
-
-def get_logger():
-    return llama_logger
-    
 def persist_chroma_index():
     chroma_client = create_chroma_client()
     chroma_client.persist()
+
+def generate_chroma_compliant_name(name: str) -> str:
+    # Replace non-alphanumeric characters with underscores
+    new_name = re.sub(r"[^a-zA-Z0-9_\-\.]", "_", name)
+    # Replace consecutive periods with a single underscore
+    new_name = re.sub(r"\.{2,}", "_", new_name)
+    # Ensure the name starts and ends with an alphanumeric character
+    if not new_name[0].isalnum():
+        new_name = "a" + new_name[1:]
+    if not new_name[-1].isalnum():
+        new_name = new_name[:-1] + "a"
+    # Truncate or pad the name to be between 3 and 63 characters
+    new_name = new_name[:63]
+    while len(new_name) < 3:
+        new_name += "_"
+
+    return new_name

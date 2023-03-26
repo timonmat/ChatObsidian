@@ -3,14 +3,16 @@
 import streamlit as st
 import utils.tinydb as userdata
 from utils.model_settings import get_sentence_transformer_dropdown
+from utils.chroma import generate_chroma_compliant_name
 
-if 'FOLDER_PATH' not in st.session_state:
-    st.session_state['FOLDER_PATH'] = 'testdata/'
+
 
 def form_callback():
     st.session_state.FOLDER_PATH
 
 def folder_path_input_box():
+    if 'FOLDER_PATH' not in st.session_state:
+        st.session_state['FOLDER_PATH'] = 'testdata/'
     return st.text_input(
                 "Obsidian Folder to scan for notes",
                 type="default",
@@ -28,9 +30,9 @@ def collection_selection_ui(collections):
         collection_data = userdata.load_collection_data(selected_collection)
         st.write(f"Folder path: \'{collection_data['folder_path']}\' ,Model name: {collection_data['model_name']}")
 
-        return selected_collection, collection_data
+        return collection_data
     else:
-        return selected_collection, None
+        return None
 
 # Function to create a new collection
 def create_new_collection_ui():
@@ -39,14 +41,20 @@ def create_new_collection_ui():
     new_collection_folder_path = folder_path_input_box()
     new_collection_model_name = get_sentence_transformer_dropdown()
     create_collection_button = st.button('Create new collection')
-
+    collection_data = None
     if create_collection_button:
         if new_collection_name not in userdata.get_collections():
-            userdata.add_collection(new_collection_name, new_collection_folder_path, new_collection_model_name)
+            chroma_compliant_name = generate_chroma_compliant_name(new_collection_name)
+            collection_data = {
+                "name": new_collection_name,
+                "index_name": chroma_compliant_name,
+                "folder_path": new_collection_folder_path,
+                "model_name": new_collection_model_name
+                }
+            userdata.add_collection(collection_data)
             st.success(f"Created new collection: {new_collection_name}")
-            return new_collection_name, new_collection_folder_path, new_collection_model_name
+            
         else:
             st.error(f"Collection with name {new_collection_name} already exists.")
-            return new_collection_name, new_collection_folder_path, new_collection_model_name
-    else:
-        return new_collection_name, new_collection_folder_path, new_collection_model_name
+            
+    return collection_data

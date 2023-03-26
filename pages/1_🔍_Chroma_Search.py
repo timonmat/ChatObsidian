@@ -41,12 +41,13 @@ def similarity_slider(similarity_top_k=7):
 
 # Collection selection UI
 st.subheader('Select an existing collection')
-selected_collection, collection_data = collection_selection_ui(userdata.get_collections())
+collection_data = collection_selection_ui(userdata.get_collections())
 
 if collection_data:
+    name = collection_data['name']
     folder_path = collection_data['folder_path']
     model_name = collection_data['model_name']
-    collection = collection_data['name']
+    collection = collection_data['index_name']
 
 query_str = st.text_area("Just Search. No summarization. No OpenAI", on_change=clear_submit)
 

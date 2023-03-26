@@ -22,7 +22,7 @@ both the question and context are provided with a template to OpenAI GPT which g
 
 ## What's the Search page  
 Nothing fancy. Just semantic search based on vectorization of bothh data and search terms. i.e a search for green and forest,
-will likely find notes about trees even when the terms used in the search queery are not in the data. so... similar things are found.
+will likely find notes about trees or maybe plants even when the terms used in the search query are not in the data. so... it finds similar or related things as well.
 ...well, maybe it's a bit fancy.
 
 ## QA assistant prompt template

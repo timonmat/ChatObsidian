@@ -28,5 +28,5 @@ def add_to_sidebar():
             "3. Ask a questions on the Query page 💬\n"
         )
 
-if __name__ == "__main__":
-    add_to_sidebar()
+#if __name__ == "__main__":
+#    add_to_sidebar()
