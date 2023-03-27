@@ -9,6 +9,7 @@ llama_index = "*"
 chromadb = "*"
 watchdog = "*"
 tinydb = "*"
+pypdf2 = "*"
 
 [dev-packages]
 

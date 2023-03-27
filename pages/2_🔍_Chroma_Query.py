@@ -35,10 +35,12 @@ st.subheader('Select an existing collection')
 collection_data = collection_selection_ui(userdata.get_collections())
 
 if collection_data:
-    name = collection_data['name']
-    folder_path = collection_data['folder_path']
-    model_name = collection_data['model_name']
-    collection = collection_data['index_name']  
+    collection = collection_data.name
+    folder_path = collection_data.folder_path
+    model_name = collection_data.model_name
+    index_name = collection_data.index_name
+    collection_type = collection_data.collection_type
+    extensions = collection_data.file_extensions
 
 query_str = st.text_area("Ask a question about your Markdown notes", on_change=clear_submit)
 with st.expander("Advanced Options"):

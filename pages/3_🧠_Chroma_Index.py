@@ -39,38 +39,33 @@ st.subheader('Select an existing collection')
 collection_data = collection_selection_ui(userdata.get_collections())
 
 if collection_data:
-    name = collection_data['name']
-    folder_path = collection_data['folder_path']
-    model_name = collection_data['model_name']
-    collection = collection_data['index_name']
+    collection = collection_data.name
+    folder_path = collection_data.folder_path
+    model_name = collection_data.model_name
+    index_name = collection_data.index_name
+    collection_type = collection_data.collection_type
+    extensions = collection_data.file_extensions
 else:
-    #folder_path = folder_path_input_box()
-    #model_name = get_sentence_transformer_dropdown()
-
     # Create a new collection UI
     with st.expander("Create New Collection"):
         collection_data = create_new_collection_ui()
         if collection_data:
-            name = collection_data['name']
-            folder_path = collection_data['folder_path']
-            model_name = collection_data['model_name']
-            collection = collection_data['index_name']
+            st.experimental_rerun()
 
-# folder_path = folder_path_input_box()
 
 with st.expander("Advanced Options"):
     reindex = st.checkbox("Delete existing index, and re-index")
-    # model_name = get_sentence_transformer_dropdown()
+    
 
 statusbar = st.empty()
 if folder_path:
     with st.spinner("Reading the directory"):
-        files = get_file_list(folder_path)
+        files = get_file_list(folder_path, extensions)
     with statusbar:
         if len(files) == 0:
-            st.write(f"No Markdown files found in {folder_path}")
+            st.write(f"No files found in {folder_path}")
         else:
-            st.write(f"Found {len(files)} Markdown files in {folder_path}")
+            st.write(f"Found {len(files)} files in {folder_path}")
 
 placeholder = st.empty()
 debug = st.empty()
@@ -83,7 +78,7 @@ col1, col2, col3 = st.columns([2,1,1])
     #         st.write("Refreshed, and added documents:  ")
     #         st.write(refreshed_documents)    
 with col3:
-    if st.button("Force persist chromadb"):
+    if st.button("Force persist db"):
         persist_chroma_index()
         with statusbar:
             st.write("Persisted Chroma DB to disk.")    
@@ -93,7 +88,10 @@ with col1:# Add a button to start indexing the files
         if folder_path:
             documents = []
             with st.spinner("Reading the files..."):
-                documents = clean_filenames_for_obsidian(load_docs_with_sdr(folder_path), folder_path)
+                documents = load_docs_with_sdr(folder_path, extensions)
+                if collection_type == 'obsidian':
+                    logging.info('cleaning file path for obsidian links')
+                    clean_filenames_for_obsidian(documents, folder_path)
             
             if st.session_state.get("api_key_configured"): # not needed for local embeddings
                 if get_chroma_collection(collection) and reindex is not True:

@@ -25,8 +25,6 @@ st.markdown(
     "📖 ChatObsidian allows you to ask questions about your Notes"
 )
 
-
-
 add_to_sidebar()
 
 
