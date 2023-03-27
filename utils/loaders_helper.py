@@ -7,7 +7,7 @@ from utils.logging import add_logging_config
 def filename_to_metadata(filename: str) -> Dict[str, Any]:
     return {"filename": filename}
 
-@st.cache_resource
+
 def load_docs_with_sdr(documents_folder, extensions=None):
     if extensions is None:
         extensions = [".md"]

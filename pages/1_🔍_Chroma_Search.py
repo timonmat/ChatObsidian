@@ -14,6 +14,8 @@ from utils.qa_template import QA_PROMPT
 from utils.chroma import get_chroma_collection, query_index, get_logger
 import utils.tinydb as userdata
 from components.ui import collection_selection_ui, render_sources
+from utils.files_helper import open_finder_to_folder
+
 
 
 
@@ -67,21 +69,9 @@ if button or st.session_state.get("submit"):
                 try:
                     with st.spinner("Processing your query..."):
                         response = query_index(query_str, collection, similarity_top_k=similarity_top_k, response_mode='no_text', model_name=model_name)
+                        
                         render_sources(response, collection_type)
-                        # for node in response.source_nodes:
-                        #     # st.markdown(f"Document ID: {node.doc_id}")
-                        #     docid, filename, content = node.source_text.strip().split('\n\n', 2)
-                        #     filename = filename.split(': ')[1]
-                        #     content = content.strip()
-                        #     # st.write(f"Filename: {filename}")
-                        #     url = (f'obsidian://open?file={urllib.parse.quote(filename)}')
-                        #     mdlink = (f'[Open in Obsidian]({url})')
-                        #     st.markdown(f"Similarity: {node.similarity}")
-                        #     st.markdown(f"Filename: {filename}")
-                        #     st.markdown(mdlink)
-                        #     with st.expander("Matching Text Chunk"):
-                        #         st.markdown(content)
-                    
+                                            
                     st.markdown("---")
                 except Exception as e:
                     st.exception(f"Error processing your query: {e}")
