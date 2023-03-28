@@ -10,8 +10,9 @@ import urllib.parse
 
 from components.sidebar import add_to_sidebar
 from utils.qa_template import QA_PROMPT
+from pathlib import Path
 
-from utils.chroma import get_chroma_collection, query_index, get_logger
+from utils.chroma import query_index, get_logger, get_collection_index_path
 import utils.tinydb as userdata
 from components.ui import collection_selection_ui, render_sources
 from utils.files_helper import open_finder_to_folder
@@ -63,8 +64,8 @@ if button or st.session_state.get("submit"):
             st.error("Please enter a question!")
         else:
             st.session_state["submit"] = True
-            chroma_collection = get_chroma_collection(collection)
-            if chroma_collection:
+            
+            if Path(get_collection_index_path(collection)).exists:
                 st.sidebar.success('Collection exists')
                 try:
                     with st.spinner("Processing your query..."):

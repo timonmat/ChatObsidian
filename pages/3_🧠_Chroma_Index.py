@@ -7,10 +7,8 @@ st.set_page_config(
 )
 
 from components.sidebar import add_to_sidebar
-from components.ui import folder_path_input_box, collection_selection_ui, create_new_collection_ui
-from utils.chroma import (build_chroma_index, 
-                          persist_chroma_index,
-                          refresh_chroma_index,
+from components.ui import collection_selection_ui, create_new_collection_ui
+from utils.chroma import ( persist_chroma_index,
                           get_chroma_collection,
                           create_or_refresh_chroma_index
                           )

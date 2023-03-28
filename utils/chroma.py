@@ -37,11 +37,10 @@ def create_chroma_client():
 
 def get_chroma_collection(collection_name):
     client = create_chroma_client()
-    logging.info(client.list_collections())
-    collection_names = [col.name for col in client.list_collections()]
-    if collection_name in collection_names: 
+    try:
         return client.get_collection(collection_name)
-    else:
+    except Exception as e:
+        logging.error(f"Failed to get collection '{collection_name}': {e}")
         return None
     
 
