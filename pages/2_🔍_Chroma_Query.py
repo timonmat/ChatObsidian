@@ -7,13 +7,13 @@ st.set_page_config(
 )
 
 import urllib.parse
+from pathlib import Path
 
 from components.sidebar import add_to_sidebar
 from components.ui import collection_selection_ui
 
 from utils.qa_template import QA_PROMPT
-from utils.chroma import create_chroma_client, get_chroma_collection, load_chroma_index, query_index, get_logger
-from utils.model_settings import get_sentence_transformer_dropdown
+from utils.chroma import get_chroma_collection, query_index, get_logger, get_collection_index_path
 import utils.tinydb as userdata
 
 
@@ -56,8 +56,8 @@ if button or st.session_state.get("submit"):
     else:
         st.session_state["submit"] = True
         index = None
-        chroma_collection = get_chroma_collection(collection)
-        if chroma_collection:
+        
+        if Path(get_collection_index_path(collection)).exists:
             st.sidebar.success('Collection exists')
             try:
                 with st.spinner("Processing your query..."):
@@ -65,7 +65,7 @@ if button or st.session_state.get("submit"):
                 st.markdown(response)
                 st.markdown("---\n")
                 with st.expander("Sources"):
-                    st.markdown("documents in collection:  " + str(chroma_collection.count()))
+                    # st.markdown("documents in collection:  " + str(chroma_collection.count()))
                     for node in response.source_nodes:
                         #st.markdown(f"Document ID: {node.doc_id}")
                         doc, filename, content = node.source_text.strip().split('\n\n', 2)
@@ -74,8 +74,9 @@ if button or st.session_state.get("submit"):
                         # st.write(f"Filename: {filename}")
                         url = (f'obsidian://open?file={urllib.parse.quote(filename)}')
                         st.markdown(f"Filename: {filename}  [Open in Obsidian]({url})")
-                        st.markdown(f"Source Text: {content}")
                         st.markdown(f"Similarity: {node.similarity}")
+                        st.markdown(content)
+                        
                         st.markdown("---")
             except Exception as e:
                 st.exception(f"Error processing your query: {e}")
