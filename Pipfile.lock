@@ -662,10 +662,10 @@
         },
         "llama-index": {
             "hashes": [
-                "sha256:016eb8572ad3064bca6d4ed0a13f11f1cfb6c0fa8bfef71338eccf48dbc6d2e0"
+                "sha256:59fe28005135e692bfe47f46c79606a10876f0bf011bad2b3746a9acedd5752b"
             ],
             "index": "pypi",
-            "version": "==0.5.0"
+            "version": "==0.5.1"
         },
         "lz4": {
             "hashes": [
