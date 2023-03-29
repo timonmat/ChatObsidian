@@ -5,26 +5,22 @@ import utils.tinydb as userdata
 from utils.model_settings import get_sentence_transformer_dropdown
 from utils.chroma import generate_chroma_compliant_name
 from utils.files_helper import open_finder_to_folder
+from components.sidebar import set_folder_path_state
 import urllib.parse
 from enum import Enum
 
 
-
-def form_callback():
-    st.session_state.FOLDER_PATH
-
 def folder_path_input_box():
-    if 'FOLDER_PATH' not in st.session_state:
-        st.session_state['FOLDER_PATH'] = 'testdata/'
-    return st.text_input(
-                "Obsidian Folder to scan for notes",
+    folder = st.text_input(
+                "Folder to scan for notes",
                 type="default",
-                key='folder',
                 placeholder="/Users/whoever/Library/Mobile Documents/iCloud~md~obsidian/Documents/ObsidianVault/",
                 help="copy your obsidian vault path here with trailing slash",  
                 value=st.session_state.get("FOLDER_PATH", ""),
-                on_change=form_callback,
             )
+    if folder:
+        set_folder_path_state(folder)
+    return folder
 
 # Function to generate collection selection UI
 def collection_selection_ui(collections):

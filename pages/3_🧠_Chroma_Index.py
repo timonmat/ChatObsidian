@@ -19,9 +19,6 @@ from utils.files_helper import get_file_list
 import logging
 import utils.tinydb as userdata
 
-
-
-
 add_to_sidebar()
 
 folder_path = None
