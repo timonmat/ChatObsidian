@@ -12,10 +12,11 @@ from components.sidebar import add_to_sidebar
 from utils.qa_template import QA_PROMPT
 from pathlib import Path
 
-from utils.chroma import query_index, get_logger, get_collection_index_path
+from utils.chroma import query_index, get_collection_index_path
 import utils.tinydb as userdata
 from components.ui import collection_selection_ui, render_sources
 from utils.files_helper import open_finder_to_folder
+from utils.model_settings import get_logger
 
 
 

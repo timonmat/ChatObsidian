@@ -4,21 +4,20 @@ from pathlib import Path
 import os
 
 from utils.qa_template import QA_PROMPT
-from utils.model_settings import get_embed_model, get_llm_predictor, get_prompt_helper
+from utils.model_settings import get_service_context
 
-embed_model = get_embed_model()
-llm_predictor = get_llm_predictor()
-prompt_helper = get_prompt_helper()
+
 
 index_path = './data/index.json'
 index = None
 
 @st.cache_resource
 def load_gptsimpleindex():
+    service_context = get_service_context()
     if st.session_state.get("api_key_configured"):
         try:
             with st.spinner("Loading index..."):
-                index = GPTSimpleVectorIndex.load_from_disk(index_path, embed_model=embed_model, llm_predictor=llm_predictor, prompt_helper=prompt_helper)
+                index = GPTSimpleVectorIndex.load_from_disk(index_path, service_context=service_context)
             st.sidebar.success("Index loaded")
             return index
         except Exception as e:
@@ -28,19 +27,20 @@ def load_gptsimpleindex():
     
 
 def query_gptsimpleindex(query_str):
+    service_context = get_service_context()
     index = load_gptsimpleindex()
     return index.query(query_str,
                         response_mode="compact", # default, compact, tree_summarize
-                        llm_predictor=llm_predictor,
-                        prompt_helper=prompt_helper,
-                        embed_model=embed_model,
                         mode="embedding",
                         similarity_top_k=5,
                         text_qa_template=QA_PROMPT,
-                        verbose=True)
+                        verbose=True,
+                        service_context=service_context
+                        )
 
 def index_gptsimpleindex(documents, reindex):
+    service_context = get_service_context()
     if reindex & Path(index_path).exists():
         os.remove(index_path)
-    index = GPTSimpleVectorIndex(documents, embed_model=embed_model, chunk_size_limit=512)
+    index = GPTSimpleVectorIndex.from_documents(documents, service_context=service_context)
     index.save_to_disk(index_path)
