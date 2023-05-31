@@ -71,7 +71,7 @@ if button or st.session_state.get("submit"):
                 try:
                     with st.spinner("Processing your query..."):
                         response = query_index(query_str, collection, similarity_top_k=similarity_top_k, response_mode='no_text', model_name=model_name)
-                        
+                        st.markdown(response.source_nodes[0].node.get_text())
                         render_sources(response, collection_type)
                                             
                     st.markdown("---")

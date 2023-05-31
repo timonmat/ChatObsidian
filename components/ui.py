@@ -100,22 +100,20 @@ def create_new_collection_ui():
 
 def render_sources(response, collection_type='obsidian'):
     for node in response.source_nodes:
-        docid, filename, content = node.source_text.strip().split('\n\n', 2)
-        filename = filename.split(': ')[1]
+        filename, content = node.node.get_text().strip().split('\n\n', 1)  
+        filename = filename.split('filename: ')[1]
         content = content.strip()
-                
+        st.markdown(f"Similarity: {node.score}")
+        st.markdown(f"Filename: {filename}")
+                        
         if collection_type == 'obsidian':
             url = (f'obsidian://open?file={urllib.parse.quote(filename)}')
-            mdlink = (f'[Open in Obsidian]({url})')
-            st.markdown(f"Similarity: {node.similarity}")
-            st.markdown(f"Filename: {filename}")
-            st.markdown(mdlink)
+            mdlink = (f'[Open in Obsidian]({url})')           
         elif collection_type == 'folder':
-            st.markdown(f"Similarity: {node.similarity}")
-            st.markdown(f"Filename: {filename}")
             url = (f'file://{urllib.parse.quote(filename)}')
             mdlink = (f'[Open File]({url})')
-            st.markdown(mdlink)
+
+        st.markdown(mdlink)
                          
         with st.expander("Matching Text Chunk"):
             st.markdown(content)

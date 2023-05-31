@@ -10,6 +10,7 @@ chromadb = "*"
 watchdog = "*"
 tinydb = "*"
 pypdf2 = "*"
+pypdf = "*"
 
 [dev-packages]
 

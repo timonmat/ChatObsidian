@@ -69,7 +69,7 @@ if button or st.session_state.get("submit"):
                     # st.markdown("documents in collection:  " + str(chroma_collection.count()))
                     for node in response.source_nodes:
                         #st.markdown(f"Document ID: {node.doc_id}")
-                        doc, filename, content = node.source_text.strip().split('\n\n', 2)
+                        filename, content = node.node.get_text().strip().split('\n\n', 1)  
                         filename = filename.split(': ')[1]
                         content = content.strip()
                         # st.write(f"Filename: {filename}")

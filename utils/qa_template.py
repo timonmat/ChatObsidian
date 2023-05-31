@@ -1,5 +1,5 @@
 # qa_template.py
-from llama_index import QuestionAnswerPrompt, GPTSimpleVectorIndex, SimpleDirectoryReader
+from llama_index import QuestionAnswerPrompt 
 
 
 # define custom QuestionAnswerPrompt
